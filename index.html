@@ -850,5 +850,35 @@
   const strip = document.querySelector('.stats-strip');
   if (strip) statsObserver.observe(strip);
 </script>
+  <footer style="background-color: #0a0e1a; padding: 60px 5% 40px; text-align: center; border-top: 1px solid rgba(212,175,55,0.1); position: relative; z-index: 1;">
+    <div style="font-family: 'Tajawal', sans-serif; font-size: 1.8rem; font-weight: 900; color: #4fd1c5; margin-bottom: 10px;">🎓 أستاذ صالح حسين</div>
+    <p style="color: #8899bb; font-size: 0.9rem; margin-bottom: 25px;">منصة تعليمية متكاملة لتدريس اللغة العربية | مصر</p>
+    
+    <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent); max-width: 600px; margin: 0 auto 25px;"></div>
+
+    <p style="color: #556688; font-size: 0.8rem; direction: ltr; font-family: sans-serif;">
+        Built by 
+        <a href="https://omarahameds2010-lab.github.io/omar-os/" 
+           target="_blank" 
+           style="color: #ff9800; text-decoration: none; font-weight: 700; transition: all 0.3s; display: inline-block;"
+           onmouseover="this.style.color='#4fd1c5'; this.style.transform='scale(1.1)'"
+           onmouseout="this.style.color='#ff9800'; this.style.transform='scale(1)'">
+           Omar Ahmed
+        </a> 
+        · 2026
+    </p>
+</footer>
+
+<script>
+    // تفعيل خاصية الظهور التدريجي اللي انت مستخدمها في المنصة
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
