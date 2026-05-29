@@ -1,1 +1,818 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مشغل الفيديو — منصة أستاذ صالح</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #07070f;
+  --bg-secondary: #0c0c18;
+  --bg-card: #10101e;
+  --accent-gold: #c9a84c;
+  --accent-gold-dim: rgba(201,168,76,0.12);
+  --accent-teal: #0f9b8e;
+  --accent-teal-dim: rgba(15,155,142,0.12);
+  --accent-red: #e05c5c;
+  --accent-green: #4caf87;
+  --text-primary: #f0ede8;
+  --text-secondary: #8a8799;
+  --text-muted: #4a4860;
+  --border: rgba(201,168,76,0.08);
+  --border-hover: rgba(201,168,76,0.2);
+  --sidebar-w: 260px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+  user-select: none;
+}
 
+/* ── ANTI-DOWNLOAD ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+.watermark {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  font-size: 13px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(201,168,76,0.18);
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; right: 0;
+  z-index: 100;
+  transition: transform .3s ease;
+}
+.sidebar-logo { padding: 24px 20px; border-bottom: 1px solid var(--border); }
+.sidebar-logo .brand { font-size: 18px; font-weight: 800; color: var(--accent-gold); }
+.sidebar-logo .sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.sidebar-user { padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+.user-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-gold), var(--accent-teal)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: var(--bg-primary); flex-shrink: 0; }
+.user-info .name { font-size: 14px; font-weight: 700; }
+.user-info .role { font-size: 11px; color: var(--accent-teal); }
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.nav-section { padding: 8px 20px 4px; font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: all .2s; position: relative; cursor: pointer; }
+.nav-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.nav-item.active { color: var(--accent-gold); background: var(--accent-gold-dim); }
+.nav-item.active::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 3px; background: var(--accent-gold); border-radius: 2px 0 0 2px; }
+.nav-item .icon { width: 18px; text-align: center; font-size: 16px; }
+.nav-badge { margin-right: auto; background: var(--accent-red); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+.streak-badge { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: rgba(201,168,76,0.06); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
+.streak-num { font-weight: 800; color: var(--accent-gold); font-family: 'IBM Plex Mono', monospace; }
+.xp-bar-wrap { padding: 12px 20px; border-bottom: 1px solid var(--border); }
+.xp-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+.xp-label span:last-child { font-family: 'IBM Plex Mono', monospace; color: var(--accent-gold); }
+.xp-track { height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+.xp-fill { height: 100%; background: linear-gradient(90deg, var(--accent-teal), var(--accent-gold)); border-radius: 2px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+
+/* ── MAIN ── */
+.main { margin-right: var(--sidebar-w); flex: 1; min-height: 100vh; display: flex; flex-direction: column; }
+.topbar { padding: 16px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; background: rgba(7,7,15,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 50; }
+.topbar-back { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary); cursor: pointer; transition: color .2s; text-decoration: none; }
+.topbar-back:hover { color: var(--accent-gold); }
+.topbar-title { font-size: 16px; font-weight: 700; flex: 1; }
+.topbar-course { font-size: 12px; color: var(--accent-teal); }
+
+/* ── PLAYER LAYOUT ── */
+.player-layout { display: grid; grid-template-columns: 1fr 340px; gap: 0; flex: 1; height: calc(100vh - 61px); }
+
+/* ── VIDEO PANEL ── */
+.video-panel { display: flex; flex-direction: column; overflow-y: auto; }
+
+.video-wrap {
+  position: relative;
+  background: #000;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.video-wrap video { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+/* Watermark overlays */
+.wm-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+.wm-static {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 13px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(201,168,76,0.35);
+  text-shadow: 0 0 8px rgba(0,0,0,0.8);
+  direction: ltr;
+}
+.wm-dynamic {
+  position: absolute;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgba(201,168,76,0.2);
+  text-shadow: 0 0 6px rgba(0,0,0,0.9);
+  transition: all 0.5s;
+  direction: ltr;
+}
+
+/* Context menu block */
+.video-wrap { -webkit-context-menu: none; }
+
+/* Custom Controls */
+.video-controls {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.9));
+  padding: 40px 16px 12px;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.video-wrap:hover .video-controls { opacity: 1; }
+.video-wrap.paused .video-controls { opacity: 1; }
+
+.progress-bar-wrap { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; cursor: pointer; margin-bottom: 10px; position: relative; }
+.progress-bar-wrap:hover { height: 6px; }
+.progress-played { height: 100%; background: var(--accent-gold); border-radius: 2px; position: relative; }
+.progress-played::after { content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; background: var(--accent-gold); border-radius: 50%; opacity: 0; transition: opacity .2s; }
+.progress-bar-wrap:hover .progress-played::after { opacity: 1; }
+
+.controls-row { display: flex; align-items: center; gap: 10px; }
+.ctrl-btn { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; padding: 4px; opacity: 0.9; transition: opacity .2s, transform .2s; }
+.ctrl-btn:hover { opacity: 1; transform: scale(1.1); }
+.time-display { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.7); direction: ltr; }
+.volume-wrap { display: flex; align-items: center; gap: 6px; }
+.volume-slider { width: 70px; height: 3px; accent-color: var(--accent-gold); cursor: pointer; }
+.speed-btn { font-size: 12px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 4px; color: #fff; border: none; cursor: pointer; transition: background .2s; }
+.speed-btn:hover { background: var(--accent-gold); color: var(--bg-primary); }
+.spacer { flex: 1; }
+.fullscreen-btn { font-size: 16px; }
+
+/* big play overlay */
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 15;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.play-overlay.show { opacity: 1; }
+.play-overlay .big-play {
+  width: 70px; height: 70px;
+  background: rgba(201,168,76,0.9);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  color: var(--bg-primary);
+  transition: transform .2s;
+}
+.play-overlay:hover .big-play { transform: scale(1.1); }
+
+/* ── VIDEO INFO ── */
+.video-info { padding: 24px; border-bottom: 1px solid var(--border); }
+.video-info h1 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+.video-info .meta { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--text-muted); flex-wrap: wrap; }
+.video-info .meta span { display: flex; align-items: center; gap: 4px; }
+.video-info .meta .accent { color: var(--accent-gold); font-family: 'IBM Plex Mono', monospace; }
+
+.video-actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.action-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  transition: all .2s;
+}
+.action-btn:hover { border-color: var(--border-hover); color: var(--text-primary); }
+.action-btn.active { border-color: var(--accent-gold); color: var(--accent-gold); background: var(--accent-gold-dim); }
+.action-btn.complete-btn { background: var(--accent-green); color: #fff; border-color: var(--accent-green); }
+.action-btn.complete-btn:hover { background: #3d9b70; }
+
+/* ── NOTES ── */
+.notes-section { padding: 24px; }
+.notes-section h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.note-input-wrap { position: relative; }
+.note-input {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  resize: vertical;
+  min-height: 90px;
+  outline: none;
+  transition: border-color .2s;
+  direction: rtl;
+}
+.note-input:focus { border-color: var(--accent-gold); }
+.note-time-tag { font-size: 11px; color: var(--accent-teal); margin-bottom: 6px; font-family: 'IBM Plex Mono', monospace; }
+.note-add-btn {
+  margin-top: 10px;
+  padding: 8px 20px;
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 8px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+}
+.note-add-btn:hover { background: #d4b356; }
+
+.notes-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+.note-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex; gap: 12px;
+  animation: fadeUp .3s forwards;
+}
+.note-item .time {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-gold);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.note-item .time:hover { text-decoration: underline; }
+.note-item .text { font-size: 13px; line-height: 1.6; flex: 1; }
+.note-item .del { color: var(--text-muted); cursor: pointer; font-size: 14px; transition: color .2s; flex-shrink: 0; }
+.note-item .del:hover { color: var(--accent-red); }
+
+/* ── PLAYLIST PANEL ── */
+.playlist-panel {
+  border-right: 1px solid var(--border);
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.playlist-header { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.playlist-header h2 { font-size: 15px; font-weight: 700; }
+.playlist-header .meta { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }
+.playlist-progress { padding: 12px 20px; border-bottom: 1px solid var(--border); }
+.pl-progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+.pl-progress-label span:last-child { color: var(--accent-gold); font-family: 'IBM Plex Mono', monospace; }
+.pl-track { height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+.pl-fill { height: 100%; background: linear-gradient(90deg, var(--accent-teal), var(--accent-gold)); border-radius: 2px; }
+.playlist-list { flex: 1; overflow-y: auto; padding: 8px 0; }
+.playlist-list::-webkit-scrollbar { width: 4px; }
+.playlist-list::-webkit-scrollbar-track { background: transparent; }
+.playlist-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.playlist-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background .2s;
+  position: relative;
+  border-bottom: 1px solid rgba(201,168,76,0.04);
+}
+.playlist-item:hover { background: rgba(255,255,255,0.03); }
+.playlist-item.active { background: var(--accent-gold-dim); }
+.playlist-item.active::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 3px; background: var(--accent-gold); }
+.playlist-item.locked { opacity: 0.4; cursor: not-allowed; }
+
+.pl-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.playlist-item.active .pl-num { background: var(--accent-gold); color: var(--bg-primary); }
+.playlist-item.done .pl-num { background: var(--accent-green); color: #fff; }
+.playlist-item.locked .pl-num { background: rgba(255,255,255,0.04); }
+
+.pl-info { flex: 1; min-width: 0; }
+.pl-info .title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pl-info .dur { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: 'IBM Plex Mono', monospace; }
+.pl-icon { font-size: 14px; flex-shrink: 0; color: var(--text-muted); }
+.playlist-item.active .pl-icon { color: var(--accent-gold); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── MOBILE ── */
+.sidebar-toggle { display: none; position: fixed; top: 16px; right: 16px; z-index: 200; width: 40px; height: 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; }
+
+@media (max-width: 1024px) {
+  .player-layout { grid-template-columns: 1fr; }
+  .playlist-panel { border-right: none; border-top: 1px solid var(--border); max-height: 400px; }
+}
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-toggle { display: flex; }
+  .main { margin-right: 0; }
+  .player-layout { height: auto; }
+}
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 24px; font-size: 14px; font-weight: 600; z-index: 1000; transition: transform .3s; pointer-events: none; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.gold { border-color: var(--accent-gold); color: var(--accent-gold); }
+.toast.green { border-color: var(--accent-green); color: var(--accent-green); }
+
+/* ── SPEED MENU ── */
+.speed-menu {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(7,7,15,0.95);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px;
+  display: none;
+  z-index: 30;
+  min-width: 100px;
+}
+.speed-menu.open { display: block; }
+.speed-opt { padding: 6px 16px; font-size: 13px; font-family: 'IBM Plex Mono', monospace; cursor: pointer; border-radius: 6px; text-align: center; transition: background .2s; }
+.speed-opt:hover { background: var(--accent-gold-dim); color: var(--accent-gold); }
+.speed-opt.active { color: var(--accent-gold); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle">☰</button>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">📚 أستاذ صالح</div>
+    <div class="sub">منصة اللغة العربية</div>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-avatar" id="userAvatar">ع</div>
+    <div class="user-info">
+      <div class="name" id="userName">الطالب</div>
+      <div class="role">طالب مميز ⭐</div>
+    </div>
+  </div>
+  <div class="xp-bar-wrap">
+    <div class="xp-label"><span>النقاط</span><span id="xpVal">720 / 1000 XP</span></div>
+    <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">الرئيسية</div>
+    <a href="../student/dashboard.html" class="nav-item"><span class="icon">🏠</span> لوحة التحكم</a>
+    <a href="courses.html" class="nav-item"><span class="icon">📖</span> كورساتي</a>
+    <a href="player.html" class="nav-item active"><span class="icon">▶️</span> الفيديوهات</a>
+    <div class="nav-section">التقييم</div>
+    <a href="exam.html" class="nav-item"><span class="icon">📝</span> الامتحانات <span class="nav-badge">2</span></a>
+    <a href="results.html" class="nav-item"><span class="icon">📊</span> نتايجي</a>
+    <a href="leaderboard.html" class="nav-item"><span class="icon">🏆</span> المتصدرين</a>
+    <div class="nav-section">أخرى</div>
+    <a href="notes.html" class="nav-item"><span class="icon">📌</span> ملاحظاتي</a>
+    <a href="settings.html" class="nav-item"><span class="icon">⚙️</span> الإعدادات</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="streak-badge">
+      <span>🔥</span>
+      <div>
+        <div style="font-size:11px;color:var(--text-muted)">السلسلة اليومية</div>
+        <div><span class="streak-num" id="streakNum">7</span> <span style="font-size:12px;color:var(--text-secondary)">يوم</span></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <a class="topbar-back" href="courses.html">← رجوع</a>
+    <div class="topbar-title">
+      <div id="topbarLesson">جاري التحميل...</div>
+      <div class="topbar-course" id="topbarCourse">النحو والصرف — المستوى الثاني</div>
+    </div>
+  </div>
+
+  <div class="player-layout">
+    <!-- VIDEO + INFO -->
+    <div class="video-panel">
+
+      <!-- VIDEO -->
+      <div class="video-wrap" id="videoWrap">
+        <video id="mainVideo" preload="metadata">
+          <!-- No actual source — demo mode -->
+        </video>
+
+        <!-- WATERMARK -->
+        <div class="wm-container">
+          <div class="wm-static" id="wmStatic">منصة أستاذ صالح | saleh@platform.com</div>
+          <div class="wm-dynamic" id="wmDynamic"></div>
+        </div>
+
+        <!-- PLAY OVERLAY -->
+        <div class="play-overlay show" id="playOverlay" onclick="togglePlay()">
+          <div class="big-play" id="bigPlay">▶</div>
+        </div>
+
+        <!-- CUSTOM CONTROLS -->
+        <div class="video-controls" id="videoControls">
+          <div class="progress-bar-wrap" id="progressWrap" onclick="seekVideo(event)">
+            <div class="progress-played" id="progressPlayed" style="width:0%"></div>
+          </div>
+          <div class="controls-row">
+            <button class="ctrl-btn" id="playBtn" onclick="togglePlay()">▶</button>
+            <button class="ctrl-btn" onclick="skipTime(-10)">⏪</button>
+            <button class="ctrl-btn" onclick="skipTime(10)">⏩</button>
+            <div class="volume-wrap">
+              <button class="ctrl-btn" onclick="toggleMute()">🔊</button>
+              <input type="range" class="volume-slider" id="volSlider" min="0" max="1" step="0.1" value="1" oninput="setVolume(this.value)">
+            </div>
+            <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+            <span class="spacer"></span>
+            <button class="speed-btn" onclick="toggleSpeedMenu(event)" id="speedBtn">1x</button>
+            <div class="speed-menu" id="speedMenu">
+              <div class="speed-opt" onclick="setSpeed(0.5)">0.5x</div>
+              <div class="speed-opt" onclick="setSpeed(0.75)">0.75x</div>
+              <div class="speed-opt active" onclick="setSpeed(1)">1x</div>
+              <div class="speed-opt" onclick="setSpeed(1.25)">1.25x</div>
+              <div class="speed-opt" onclick="setSpeed(1.5)">1.5x</div>
+              <div class="speed-opt" onclick="setSpeed(2)">2x</div>
+            </div>
+            <button class="ctrl-btn fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO INFO -->
+      <div class="video-info">
+        <h1 id="videoTitle">الفعل المضارع وعلامات إعرابه</h1>
+        <div class="meta">
+          <span>📅 <span class="accent" id="videoDate">2024/03/15</span></span>
+          <span>⏱️ <span class="accent" id="videoDur">24:35</span></span>
+          <span>👁️ <span class="accent" id="videoViews">1,247</span> مشاهدة</span>
+          <span>📂 النحو والصرف</span>
+        </div>
+        <div class="video-actions">
+          <button class="action-btn" id="likeBtn" onclick="toggleLike()">❤️ إضافة للمفضلة</button>
+          <button class="action-btn complete-btn" id="completeBtn" onclick="markComplete()">✅ تم المشاهدة</button>
+          <button class="action-btn" onclick="showToast('📥 التحميل غير مسموح به', 'gold')">🚫 تحميل غير متاح</button>
+        </div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="notes-section">
+        <h3>📌 ملاحظاتي <span style="font-size:12px;color:var(--text-muted);font-weight:400">تُحفظ تلقائياً</span></h3>
+        <div class="note-time-tag" id="currentTimeTag">⏱️ الوقت الحالي: 0:00</div>
+        <div class="note-input-wrap">
+          <textarea class="note-input" id="noteInput" placeholder="اكتب ملاحظتك هنا... (سيتم ربطها بوقت الفيديو تلقائياً)"></textarea>
+        </div>
+        <button class="note-add-btn" onclick="addNote()">+ إضافة ملاحظة</button>
+        <div class="notes-list" id="notesList"></div>
+      </div>
+
+    </div>
+
+    <!-- PLAYLIST -->
+    <div class="playlist-panel">
+      <div class="playlist-header">
+        <h2 id="courseTitle">النحو والصرف — المستوى الثاني</h2>
+        <div class="meta" id="playlistMeta">20 درس</div>
+      </div>
+      <div class="playlist-progress">
+        <div class="pl-progress-label">
+          <span>التقدم</span>
+          <span id="plPct">65%</span>
+        </div>
+        <div class="pl-track">
+          <div class="pl-fill" id="plFill" style="width:65%"></div>
+        </div>
+      </div>
+      <div class="playlist-list" id="playlistList"></div>
+    </div>
+
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── AUTH ──
+const session = JSON.parse(localStorage.getItem('saleh_session') || 'null');
+if (!session || session.role !== 'student') window.location.href = '../auth/login.html';
+
+const user = JSON.parse(localStorage.getItem('saleh_users') || '[]')
+  .find(u => u.id === session?.userId) || { name: 'عمر', xp: 720, streak: 7 };
+
+document.getElementById('userName').textContent = user.name || 'الطالب';
+document.getElementById('userAvatar').textContent = (user.name || 'ط')[0];
+document.getElementById('streakNum').textContent = user.streak || 7;
+setTimeout(() => { document.getElementById('xpFill').style.width = `${Math.min((user.xp || 720) / 1000 * 100, 100)}%`; }, 300);
+
+// ── PLAYLIST DATA ──
+const LESSONS = [
+  { id: 1, title: 'مقدمة الكورس', dur: '8:20', status: 'done' },
+  { id: 2, title: 'المبتدأ والخبر — مراجعة', dur: '18:45', status: 'done' },
+  { id: 3, title: 'الجملة الفعلية — الفاعل', dur: '22:10', status: 'done' },
+  { id: 4, title: 'الجملة الفعلية — المفعول به', dur: '19:55', status: 'done' },
+  { id: 5, title: 'المضاف والمضاف إليه', dur: '16:30', status: 'done' },
+  { id: 6, title: 'النعت والمنعوت', dur: '21:15', status: 'done' },
+  { id: 7, title: 'العطف وحروفه', dur: '17:40', status: 'done' },
+  { id: 8, title: 'الفعل المضارع وعلامات إعرابه', dur: '24:35', status: 'current' },
+  { id: 9, title: 'نواصب الفعل المضارع', dur: '20:00', status: 'locked' },
+  { id: 10, title: 'جوازم الفعل المضارع', dur: '18:50', status: 'locked' },
+  { id: 11, title: 'الأسماء الخمسة', dur: '15:20', status: 'locked' },
+  { id: 12, title: 'الأفعال الخمسة', dur: '16:45', status: 'locked' },
+  { id: 13, title: 'الممنوع من الصرف', dur: '22:30', status: 'locked' },
+  { id: 14, title: 'الإعراب التقديري والمحلي', dur: '19:10', status: 'locked' },
+  { id: 15, title: 'أسلوب الشرط', dur: '23:00', status: 'locked' },
+  { id: 16, title: 'أسلوب الاستفهام', dur: '17:25', status: 'locked' },
+  { id: 17, title: 'أسلوب التوكيد', dur: '14:50', status: 'locked' },
+  { id: 18, title: 'أسلوب التعجب', dur: '16:00', status: 'locked' },
+  { id: 19, title: 'مراجعة شاملة', dur: '30:00', status: 'locked' },
+  { id: 20, title: 'الاختبار النهائي', dur: '—', status: 'locked' },
+];
+
+let currentLesson = LESSONS.find(l => l.status === 'current') || LESSONS[0];
+let isPlaying = false;
+let currentSpeed = 1;
+let notes = JSON.parse(localStorage.getItem('saleh_notes_' + currentLesson.id) || '[]');
+
+// ── RENDER PLAYLIST ──
+function renderPlaylist() {
+  document.getElementById('playlistList').innerHTML = LESSONS.map((l, i) => `
+    <div class="playlist-item ${l.status === 'current' ? 'active' : ''} ${l.status === 'done' ? 'done' : ''} ${l.status === 'locked' ? 'locked' : ''}"
+         onclick="playLesson(${l.id})">
+      <div class="pl-num">${l.status === 'done' ? '✓' : l.status === 'current' ? '▶' : l.status === 'locked' ? '🔒' : i + 1}</div>
+      <div class="pl-info">
+        <div class="title">${l.title}</div>
+        <div class="dur">${l.dur}</div>
+      </div>
+      <div class="pl-icon">${l.status === 'done' ? '✅' : l.status === 'current' ? '▶️' : '🔒'}</div>
+    </div>
+  `).join('');
+}
+
+function playLesson(id) {
+  const lesson = LESSONS.find(l => l.id === id);
+  if (lesson.status === 'locked') {
+    showToast('🔒 أكمل الدروس السابقة أولاً', 'gold');
+    return;
+  }
+  currentLesson = lesson;
+  LESSONS.forEach(l => { if (l.status === 'current') l.status = 'accessible'; });
+  lesson.status = 'current';
+  document.getElementById('videoTitle').textContent = lesson.title;
+  document.getElementById('topbarLesson').textContent = lesson.title;
+  document.getElementById('videoDur').textContent = lesson.dur;
+  renderPlaylist();
+  loadNotes();
+  resetPlayer();
+  showToast('▶ ' + lesson.title, 'gold');
+}
+
+function resetPlayer() {
+  isPlaying = false;
+  document.getElementById('playBtn').textContent = '▶';
+  document.getElementById('bigPlay').textContent = '▶';
+  document.getElementById('playOverlay').classList.add('show');
+  document.getElementById('progressPlayed').style.width = '0%';
+  document.getElementById('timeDisplay').textContent = '0:00 / 0:00';
+}
+
+// ── VIDEO CONTROLS (DEMO — no real video) ──
+let demoTime = 0;
+let demoDur = 1475; // 24:35
+let demoInterval = null;
+
+function togglePlay() {
+  isPlaying = !isPlaying;
+  if (isPlaying) {
+    document.getElementById('playBtn').textContent = '⏸';
+    document.getElementById('bigPlay').textContent = '⏸';
+    document.getElementById('playOverlay').classList.remove('show');
+    document.getElementById('videoWrap').classList.remove('paused');
+    demoInterval = setInterval(() => {
+      demoTime = Math.min(demoTime + 1, demoDur);
+      updateProgress();
+      if (demoTime >= demoDur) { isPlaying = false; clearInterval(demoInterval); }
+    }, 1000);
+  } else {
+    document.getElementById('playBtn').textContent = '▶';
+    document.getElementById('bigPlay').textContent = '▶';
+    document.getElementById('playOverlay').classList.add('show');
+    document.getElementById('videoWrap').classList.add('paused');
+    clearInterval(demoInterval);
+  }
+}
+
+function updateProgress() {
+  const pct = (demoTime / demoDur) * 100;
+  document.getElementById('progressPlayed').style.width = pct + '%';
+  document.getElementById('timeDisplay').textContent = `${fmtTime(demoTime)} / ${fmtTime(demoDur)}`;
+  document.getElementById('currentTimeTag').textContent = `⏱️ الوقت الحالي: ${fmtTime(demoTime)}`;
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = String(s % 60).padStart(2, '0');
+  return `${m}:${sec}`;
+}
+
+function seekVideo(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  demoTime = Math.floor(pct * demoDur);
+  updateProgress();
+}
+
+function skipTime(sec) {
+  demoTime = Math.max(0, Math.min(demoTime + sec, demoDur));
+  updateProgress();
+}
+
+function toggleMute() {
+  const v = document.getElementById('volSlider');
+  v.value = v.value > 0 ? 0 : 1;
+}
+
+function setVolume(v) {}
+
+function toggleFullscreen() {
+  const vw = document.getElementById('videoWrap');
+  if (!document.fullscreenElement) vw.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
+
+let speedMenuOpen = false;
+function toggleSpeedMenu(e) {
+  e.stopPropagation();
+  speedMenuOpen = !speedMenuOpen;
+  document.getElementById('speedMenu').classList.toggle('open', speedMenuOpen);
+}
+
+function setSpeed(s) {
+  currentSpeed = s;
+  document.getElementById('speedBtn').textContent = s + 'x';
+  document.querySelectorAll('.speed-opt').forEach(o => o.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('speedMenu').classList.remove('open');
+  speedMenuOpen = false;
+}
+
+document.addEventListener('click', () => {
+  document.getElementById('speedMenu').classList.remove('open');
+  speedMenuOpen = false;
+});
+
+// ── ACTIONS ──
+function toggleLike() {
+  const btn = document.getElementById('likeBtn');
+  btn.classList.toggle('active');
+  btn.textContent = btn.classList.contains('active') ? '❤️ في المفضلة' : '❤️ إضافة للمفضلة';
+  showToast(btn.classList.contains('active') ? '❤️ أُضيف للمفضلة' : '💔 أُزيل من المفضلة', 'gold');
+}
+
+function markComplete() {
+  const btn = document.getElementById('completeBtn');
+  btn.textContent = '✅ مشاهدة مكتملة';
+  btn.style.background = 'var(--accent-teal)';
+  btn.style.borderColor = 'var(--accent-teal)';
+  LESSONS.find(l => l.id === currentLesson.id).status = 'done';
+  renderPlaylist();
+  showToast('🎉 رائع! تم تسجيل مشاهدة الدرس', 'gold');
+}
+
+// ── NOTES ──
+function loadNotes() {
+  notes = JSON.parse(localStorage.getItem('saleh_notes_' + currentLesson.id) || '[]');
+  renderNotes();
+}
+
+function addNote() {
+  const input = document.getElementById('noteInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const note = { id: Date.now(), text, time: demoTime, timeFmt: fmtTime(demoTime) };
+  notes.unshift(note);
+  localStorage.setItem('saleh_notes_' + currentLesson.id, JSON.stringify(notes));
+  input.value = '';
+  renderNotes();
+  showToast('📌 تم حفظ الملاحظة', 'gold');
+}
+
+function deleteNote(id) {
+  notes = notes.filter(n => n.id !== id);
+  localStorage.setItem('saleh_notes_' + currentLesson.id, JSON.stringify(notes));
+  renderNotes();
+}
+
+function seekToNote(time) {
+  demoTime = time;
+  updateProgress();
+  if (!isPlaying) togglePlay();
+}
+
+function renderNotes() {
+  const list = document.getElementById('notesList');
+  if (!notes.length) {
+    list.innerHTML = '<p style="font-size:13px;color:var(--text-muted);text-align:center;padding:20px 0">لا توجد ملاحظات بعد</p>';
+    return;
+  }
+  list.innerHTML = notes.map(n => `
+    <div class="note-item">
+      <span class="time" onclick="seekToNote(${n.time})">${n.timeFmt}</span>
+      <span class="text">${n.text}</span>
+      <span class="del" onclick="deleteNote(${n.id})">✕</span>
+    </div>
+  `).join('');
+}
+
+// ── WATERMARK ──
+function moveWatermark() {
+  const wm = document.getElementById('wmDynamic');
+  const vw = document.getElementById('videoWrap');
+  const maxX = vw.offsetWidth - 200;
+  const maxY = vw.offsetHeight - 30;
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+  wm.style.left = x + 'px';
+  wm.style.top = y + 'px';
+  wm.textContent = (user.name || session.email || 'طالب') + ' | ' + new Date().toLocaleDateString('ar-EG');
+}
+moveWatermark();
+setInterval(moveWatermark, 4000);
+
+// ── ANTI RIGHT CLICK ──
+document.addEventListener('contextmenu', e => {
+  if (e.target.closest('.video-wrap')) {
+    e.preventDefault();
+    showToast('🚫 التحميل غير مسموح به', 'gold');
+  }
+});
+
+// ── KEYBOARD SHORTCUTS ──
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'TEXTAREA') return;
+  if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+  if (e.code === 'ArrowLeft') skipTime(-10);
+  if (e.code === 'ArrowRight') skipTime(10);
+});
+
+// ── TOAST ──
+function showToast(msg, type = 'gold') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── MOBILE ──
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+// ── INIT ──
+document.getElementById('videoTitle').textContent = currentLesson.title;
+document.getElementById('topbarLesson').textContent = currentLesson.title;
+renderPlaylist();
+loadNotes();
+</script>
+</body>
+</html>
