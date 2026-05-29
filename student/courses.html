@@ -1,1 +1,963 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>كورساتي — منصة أستاذ صالح</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #07070f;
+  --bg-secondary: #0c0c18;
+  --bg-card: #10101e;
+  --bg-card-hover: #14142a;
+  --accent-gold: #c9a84c;
+  --accent-gold-dim: rgba(201,168,76,0.12);
+  --accent-gold-glow: rgba(201,168,76,0.25);
+  --accent-teal: #0f9b8e;
+  --accent-teal-dim: rgba(15,155,142,0.12);
+  --accent-red: #e05c5c;
+  --accent-green: #4caf87;
+  --text-primary: #f0ede8;
+  --text-secondary: #8a8799;
+  --text-muted: #4a4860;
+  --border: rgba(201,168,76,0.08);
+  --border-hover: rgba(201,168,76,0.2);
+  --sidebar-w: 260px;
+}
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; right: 0;
+  z-index: 100;
+  transition: transform .3s ease;
+}
+
+.sidebar-logo {
+  padding: 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo .brand {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent-gold);
+  letter-spacing: -.5px;
+}
+.sidebar-logo .sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.sidebar-user {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.user-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-teal));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 16px; color: var(--bg-primary);
+  flex-shrink: 0;
+}
+.user-info .name { font-size: 14px; font-weight: 700; }
+.user-info .role { font-size: 11px; color: var(--accent-teal); }
+
+.xp-bar-wrap { padding: 12px 20px; border-bottom: 1px solid var(--border); }
+.xp-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+.xp-label span:last-child { font-family: 'IBM Plex Mono', monospace; color: var(--accent-gold); }
+.xp-track { height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+.xp-fill { height: 100%; background: linear-gradient(90deg, var(--accent-teal), var(--accent-gold)); border-radius: 2px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.nav-section { padding: 8px 20px 4px; font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px;
+  font-size: 14px; font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all .2s;
+  position: relative;
+  cursor: pointer;
+}
+.nav-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.nav-item.active {
+  color: var(--accent-gold);
+  background: var(--accent-gold-dim);
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent-gold);
+  border-radius: 2px 0 0 2px;
+}
+.nav-item .icon { width: 18px; text-align: center; font-size: 16px; }
+.nav-badge {
+  margin-right: auto;
+  background: var(--accent-red);
+  color: #fff;
+  font-size: 10px; font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+.streak-badge {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+}
+.streak-badge .fire { font-size: 18px; }
+.streak-num { font-weight: 800; color: var(--accent-gold); font-family: 'IBM Plex Mono', monospace; }
+
+/* ── MAIN ── */
+.main {
+  margin-right: var(--sidebar-w);
+  flex: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(7,7,15,0.8);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.topbar-title { font-size: 20px; font-weight: 800; flex: 1; }
+.topbar-title span { color: var(--accent-gold); }
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  transition: border-color .2s;
+}
+.search-box:focus-within { border-color: var(--accent-gold); }
+.search-box input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  width: 200px;
+}
+.search-box input::placeholder { color: var(--text-muted); }
+.search-box .icon { color: var(--text-muted); font-size: 16px; }
+
+/* ── CONTENT ── */
+.content { padding: 32px; flex: 1; }
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp .5s forwards;
+}
+.stat-card:nth-child(1) { animation-delay: .05s; }
+.stat-card:nth-child(2) { animation-delay: .1s; }
+.stat-card:nth-child(3) { animation-delay: .15s; }
+.stat-card:nth-child(4) { animation-delay: .2s; }
+.stat-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.stat-icon.gold { background: var(--accent-gold-dim); }
+.stat-icon.teal { background: var(--accent-teal-dim); }
+.stat-icon.green { background: rgba(76,175,135,0.12); }
+.stat-icon.red { background: rgba(224,92,92,0.12); }
+.stat-info .val {
+  font-size: 22px; font-weight: 800;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.stat-info .lbl { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ── FILTERS ── */
+.filters-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp .5s .3s forwards;
+}
+.filter-tabs {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  gap: 2px;
+}
+.filter-tab {
+  padding: 6px 16px;
+  border-radius: 7px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all .2s;
+  border: none;
+  background: none;
+  font-family: 'Cairo', sans-serif;
+}
+.filter-tab.active { background: var(--accent-gold); color: var(--bg-primary); }
+.filter-tab:hover:not(.active) { color: var(--text-primary); }
+
+.filter-select {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 7px 14px;
+  color: var(--text-primary);
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+}
+.filter-select option { background: var(--bg-card); }
+
+.view-toggle {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  gap: 2px;
+  margin-right: auto;
+}
+.view-btn {
+  width: 32px; height: 32px;
+  border-radius: 7px;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: all .2s;
+}
+.view-btn.active { background: var(--accent-gold-dim); color: var(--accent-gold); }
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp .5s .35s forwards;
+}
+.section-header h2 { font-size: 18px; font-weight: 700; }
+.section-header h2 span { color: var(--accent-gold); font-size: 14px; font-weight: 500; margin-right: 8px; }
+.see-all { font-size: 13px; color: var(--accent-teal); text-decoration: none; transition: color .2s; }
+.see-all:hover { color: var(--accent-gold); }
+
+/* ── CONTINUE CARD ── */
+.continue-card {
+  background: linear-gradient(135deg, rgba(15,155,142,0.15), rgba(201,168,76,0.1));
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeUp .5s .25s forwards;
+}
+.continue-card::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 60% 50%, rgba(201,168,76,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.continue-thumb {
+  width: 100px; height: 70px;
+  border-radius: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.continue-thumb::after {
+  content: '▶';
+  position: absolute;
+  width: 32px; height: 32px;
+  background: rgba(201,168,76,0.9);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  color: var(--bg-primary);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.continue-info { flex: 1; }
+.continue-info .tag {
+  font-size: 11px; font-weight: 700;
+  color: var(--accent-teal);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.continue-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.continue-info p { font-size: 13px; color: var(--text-secondary); }
+.continue-progress { margin-top: 12px; }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.progress-label span:last-child { color: var(--accent-gold); font-family: 'IBM Plex Mono', monospace; }
+.progress-track {
+  height: 5px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-teal), var(--accent-gold));
+  border-radius: 3px;
+  transition: width 1.5s cubic-bezier(.4,0,.2,1);
+}
+.continue-btn {
+  padding: 12px 28px;
+  background: linear-gradient(135deg, var(--accent-gold), #b8962a);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 10px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  transition: all .3s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.continue-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(201,168,76,0.3); }
+
+/* ── COURSES GRID ── */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  opacity: 0;
+  animation: fadeUp .5s .4s forwards;
+}
+.courses-grid.list-view {
+  grid-template-columns: 1fr;
+}
+
+.course-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all .3s;
+  position: relative;
+}
+.course-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.course-card.locked { opacity: 0.6; cursor: not-allowed; }
+.course-card.locked:hover { transform: none; box-shadow: none; }
+
+.course-thumb {
+  height: 160px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.course-thumb.arabic { background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05)); }
+.course-thumb.grammar { background: linear-gradient(135deg, rgba(15,155,142,0.15), rgba(15,155,142,0.05)); }
+.course-thumb.literature { background: linear-gradient(135deg, rgba(76,175,135,0.15), rgba(76,175,135,0.05)); }
+.course-thumb.calligraphy { background: linear-gradient(135deg, rgba(224,92,92,0.15), rgba(224,92,92,0.05)); }
+
+.course-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.course-badge.new { background: var(--accent-gold); color: var(--bg-primary); }
+.course-badge.popular { background: var(--accent-teal); color: #fff; }
+.course-badge.locked-badge { background: rgba(255,255,255,0.1); color: var(--text-secondary); }
+.course-badge.done { background: var(--accent-green); color: #fff; }
+
+.lock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(7,7,15,0.6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+}
+
+.course-body { padding: 20px; }
+.course-body h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
+.course-body p { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; }
+
+.course-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.course-meta span { display: flex; align-items: center; gap: 4px; }
+.course-meta .accent { color: var(--accent-gold); font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; }
+
+.course-progress-bar { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; margin-bottom: 16px; }
+.course-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-teal), var(--accent-gold)); border-radius: 2px; }
+
+.course-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.course-footer .progress-pct {
+  font-size: 12px; color: var(--text-muted);
+  font-family: 'IBM Plex Mono', monospace;
+}
+.course-footer .progress-pct span { color: var(--accent-gold); font-weight: 600; }
+.course-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all .2s;
+}
+.course-btn.primary { background: var(--accent-gold); color: var(--bg-primary); }
+.course-btn.primary:hover { background: #d4b356; }
+.course-btn.secondary { background: var(--accent-teal-dim); color: var(--accent-teal); border: 1px solid rgba(15,155,142,0.2); }
+.course-btn.secondary:hover { background: rgba(15,155,142,0.2); }
+.course-btn.locked-btn { background: rgba(255,255,255,0.06); color: var(--text-muted); cursor: not-allowed; }
+
+/* LIST VIEW */
+.courses-grid.list-view .course-card { display: flex; border-radius: 12px; }
+.courses-grid.list-view .course-thumb { width: 140px; height: auto; min-height: 100px; flex-shrink: 0; font-size: 36px; border-radius: 0; }
+.courses-grid.list-view .course-body { flex: 1; display: flex; flex-direction: column; }
+.courses-grid.list-view .course-body p { display: none; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-muted);
+}
+.empty-state .icon { font-size: 64px; margin-bottom: 16px; opacity: .5; }
+.empty-state h3 { font-size: 18px; color: var(--text-secondary); margin-bottom: 8px; }
+.empty-state p { font-size: 14px; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── MOBILE TOGGLE ── */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 16px; right: 16px;
+  z-index: 200;
+  width: 40px; height: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-toggle { display: flex; }
+  .main { margin-right: 0; }
+  .content { padding: 20px 16px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .continue-card { flex-direction: column; text-align: center; }
+  .continue-thumb { width: 100%; height: 120px; }
+  .courses-grid { grid-template-columns: 1fr; }
+  .topbar { padding: 16px 20px; }
+  .search-box { display: none; }
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 1000;
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.gold { border-color: var(--accent-gold); color: var(--accent-gold); }
+.toast.red { border-color: var(--accent-red); color: var(--accent-red); }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle">☰</button>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">📚 أستاذ صالح</div>
+    <div class="sub">منصة اللغة العربية</div>
+  </div>
+
+  <div class="sidebar-user">
+    <div class="user-avatar" id="userAvatar">ع</div>
+    <div class="user-info">
+      <div class="name" id="userName">الطالب</div>
+      <div class="role">طالب مميز ⭐</div>
+    </div>
+  </div>
+
+  <div class="xp-bar-wrap">
+    <div class="xp-label">
+      <span>النقاط</span>
+      <span id="xpVal">0 / 1000 XP</span>
+    </div>
+    <div class="xp-track">
+      <div class="xp-fill" id="xpFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">الرئيسية</div>
+    <a href="../student/dashboard.html" class="nav-item">
+      <span class="icon">🏠</span> لوحة التحكم
+    </a>
+    <a href="courses.html" class="nav-item active">
+      <span class="icon">📖</span> كورساتي
+    </a>
+    <a href="player.html" class="nav-item">
+      <span class="icon">▶️</span> الفيديوهات
+    </a>
+    <div class="nav-section">التقييم</div>
+    <a href="exam.html" class="nav-item">
+      <span class="icon">📝</span> الامتحانات
+      <span class="nav-badge">2</span>
+    </a>
+    <a href="results.html" class="nav-item">
+      <span class="icon">📊</span> نتايجي
+    </a>
+    <a href="leaderboard.html" class="nav-item">
+      <span class="icon">🏆</span> المتصدرين
+    </a>
+    <div class="nav-section">أخرى</div>
+    <a href="notes.html" class="nav-item">
+      <span class="icon">📌</span> ملاحظاتي
+    </a>
+    <a href="settings.html" class="nav-item">
+      <span class="icon">⚙️</span> الإعدادات
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="streak-badge">
+      <span class="fire">🔥</span>
+      <div>
+        <div style="font-size:11px;color:var(--text-muted)">السلسلة اليومية</div>
+        <div><span class="streak-num" id="streakNum">0</span> <span style="font-size:12px;color:var(--text-secondary)">يوم</span></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title">كورساتي <span>📖</span></div>
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" placeholder="ابحث عن كورس..." id="searchInput">
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon gold">📚</div>
+        <div class="stat-info">
+          <div class="val" id="totalCourses">0</div>
+          <div class="lbl">إجمالي الكورسات</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon teal">▶️</div>
+        <div class="stat-info">
+          <div class="val" id="inProgressCount">0</div>
+          <div class="lbl">جاري التعلم</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div class="stat-info">
+          <div class="val" id="completedCount">0</div>
+          <div class="lbl">مكتمل</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red">⏱️</div>
+        <div class="stat-info">
+          <div class="val" id="totalHours">0h</div>
+          <div class="lbl">ساعات التعلم</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTINUE WATCHING -->
+    <div class="continue-card" id="continueCard">
+      <div class="continue-thumb">📝</div>
+      <div class="continue-info">
+        <div class="tag">▶ استكمل من حيث توقفت</div>
+        <h3 id="continueTitle">النحو والصرف — المستوى الثاني</h3>
+        <p id="continueLesson">الدرس 8: الفعل المضارع وعلامات إعرابه</p>
+        <div class="continue-progress">
+          <div class="progress-label">
+            <span>التقدم في الكورس</span>
+            <span id="continuePct">65%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="continueBar" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <button class="continue-btn" onclick="goToPlayer()">▶ استكمل الآن</button>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters-bar">
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setFilter(this,'all')">الكل</button>
+        <button class="filter-tab" onclick="setFilter(this,'inprogress')">جاري</button>
+        <button class="filter-tab" onclick="setFilter(this,'completed')">مكتمل</button>
+        <button class="filter-tab" onclick="setFilter(this,'locked')">مقفول</button>
+      </div>
+      <select class="filter-select" id="categoryFilter" onchange="applyCategoryFilter()">
+        <option value="all">كل التخصصات</option>
+        <option value="نحو">نحو وصرف</option>
+        <option value="أدب">أدب عربي</option>
+        <option value="إملاء">إملاء وكتابة</option>
+        <option value="خط">فن الخط</option>
+      </select>
+      <div class="view-toggle">
+        <button class="view-btn active" id="gridBtn" onclick="setView('grid')">⊞</button>
+        <button class="view-btn" id="listBtn" onclick="setView('list')">☰</button>
+      </div>
+    </div>
+
+    <!-- SECTION HEADER -->
+    <div class="section-header">
+      <h2>الكورسات المتاحة <span id="courseCount">(0)</span></h2>
+      <a href="#" class="see-all">عرض الكل</a>
+    </div>
+
+    <!-- COURSES GRID -->
+    <div class="courses-grid" id="coursesGrid"></div>
+
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── AUTH GUARD ──
+const session = JSON.parse(localStorage.getItem('saleh_session') || 'null');
+if (!session || session.role !== 'student') {
+  window.location.href = '../auth/login.html';
+}
+
+// ── USER DATA ──
+const user = JSON.parse(localStorage.getItem('saleh_users') || '[]')
+  .find(u => u.id === session?.userId) || { name: 'الطالب', xp: 720, streak: 7 };
+
+document.getElementById('userName').textContent = user.name || 'الطالب';
+document.getElementById('userAvatar').textContent = (user.name || 'ط')[0];
+document.getElementById('streakNum').textContent = user.streak || 7;
+
+const xp = user.xp || 720;
+const xpMax = 1000;
+document.getElementById('xpVal').textContent = `${xp} / ${xpMax} XP`;
+setTimeout(() => {
+  document.getElementById('xpFill').style.width = `${Math.min(xp / xpMax * 100, 100)}%`;
+}, 300);
+
+// ── COURSES DATA ──
+const COURSES = [
+  {
+    id: 1, title: 'النحو والصرف — المستوى الأول',
+    desc: 'أساسيات النحو العربي من الصفر: المبتدأ والخبر، الفاعل والمفعول، وعلامات الإعراب.',
+    thumb: '📝', category: 'نحو', type: 'grammar',
+    videos: 14, hours: 6.5, status: 'completed', progress: 100,
+    badge: 'done', badgeLabel: 'مكتمل'
+  },
+  {
+    id: 2, title: 'النحو والصرف — المستوى الثاني',
+    desc: 'تعمق في الجمل الفعلية والاسمية، الأساليب النحوية المتقدمة، والنصوص التطبيقية.',
+    thumb: '📖', category: 'نحو', type: 'grammar',
+    videos: 20, hours: 9, status: 'inprogress', progress: 65,
+    badge: 'popular', badgeLabel: 'الأكثر شعبية'
+  },
+  {
+    id: 3, title: 'الأدب العربي الكلاسيكي',
+    desc: 'رحلة في روائع الأدب العربي: المعلقات، نهج البلاغة، وكبار الشعراء والأدباء.',
+    thumb: '🏛️', category: 'أدب', type: 'literature',
+    videos: 18, hours: 8, status: 'inprogress', progress: 30,
+    badge: 'new', badgeLabel: 'جديد'
+  },
+  {
+    id: 4, title: 'الإملاء والكتابة الصحيحة',
+    desc: 'أحكام الهمزة، التنوين، الكتابة الصحيحة وأخطاء الكتابة الشائعة مع تدريبات مكثفة.',
+    thumb: '✏️', category: 'إملاء', type: 'arabic',
+    videos: 12, hours: 5, status: 'locked', progress: 0,
+    badge: 'locked-badge', badgeLabel: 'مقفول'
+  },
+  {
+    id: 5, title: 'البلاغة وفنون القول',
+    desc: 'علم البيان والبديع والمعاني — التشبيه والاستعارة والكناية مع أمثلة من القرآن والشعر.',
+    thumb: '🌹', category: 'أدب', type: 'literature',
+    videos: 16, hours: 7.5, status: 'locked', progress: 0,
+    badge: 'locked-badge', badgeLabel: 'مقفول'
+  },
+  {
+    id: 6, title: 'فن الخط العربي',
+    desc: 'مدرسة الخط النسخي والرقعي والثلث — من الأدوات إلى التحف الفنية.',
+    thumb: '🖊️', category: 'خط', type: 'calligraphy',
+    videos: 10, hours: 4, status: 'locked', progress: 0,
+    badge: 'new', badgeLabel: 'قريباً'
+  }
+];
+
+// ── STATE ──
+let activeFilter = 'all';
+let activeCategory = 'all';
+let activeView = 'grid';
+
+// ── RENDER STATS ──
+function renderStats() {
+  const total = COURSES.length;
+  const inProgress = COURSES.filter(c => c.status === 'inprogress').length;
+  const completed = COURSES.filter(c => c.status === 'completed').length;
+  const hours = COURSES.filter(c => c.status !== 'locked').reduce((s, c) => s + c.hours, 0);
+
+  animateCount('totalCourses', total);
+  animateCount('inProgressCount', inProgress);
+  animateCount('completedCount', completed);
+  document.getElementById('totalHours').textContent = hours.toFixed(0) + 'h';
+}
+
+function animateCount(id, target) {
+  const el = document.getElementById(id);
+  let current = 0;
+  const step = Math.ceil(target / 30);
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current;
+    if (current >= target) clearInterval(timer);
+  }, 40);
+}
+
+// ── RENDER COURSES ──
+function renderCourses() {
+  const grid = document.getElementById('coursesGrid');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+
+  let filtered = COURSES.filter(c => {
+    if (activeFilter !== 'all' && c.status !== activeFilter) return false;
+    if (activeCategory !== 'all' && !c.category.includes(activeCategory)) return false;
+    if (search && !c.title.includes(search) && !c.desc.includes(search)) return false;
+    return true;
+  });
+
+  document.getElementById('courseCount').textContent = `(${filtered.length})`;
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <div class="icon">🔍</div>
+      <h3>مفيش نتايج</h3>
+      <p>جرب تغير الفلتر أو كلمة البحث</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(c => `
+    <div class="course-card ${c.status === 'locked' ? 'locked' : ''}" onclick="handleCourseClick(${c.id})">
+      <div class="course-thumb ${c.type}">
+        ${c.thumb}
+        ${c.status === 'locked' ? '<div class="lock-overlay">🔒</div>' : ''}
+        <div class="course-badge ${c.badge}">${c.badgeLabel}</div>
+      </div>
+      <div class="course-body">
+        <h3>${c.title}</h3>
+        <p>${c.desc}</p>
+        <div class="course-meta">
+          <span>🎬 <span class="accent">${c.videos}</span> درس</span>
+          <span>⏱️ <span class="accent">${c.hours}h</span></span>
+          <span>📂 ${c.category}</span>
+        </div>
+        ${c.status !== 'locked' ? `
+        <div class="course-progress-bar">
+          <div class="course-progress-fill" style="width:${c.progress}%"></div>
+        </div>` : ''}
+        <div class="course-footer">
+          <div class="progress-pct">
+            ${c.status === 'locked' ? '🔒 يتطلب اشتراك' : `تقدمت <span>${c.progress}%</span>`}
+          </div>
+          <button class="course-btn ${c.status === 'inprogress' ? 'primary' : c.status === 'completed' ? 'secondary' : 'locked-btn'}">
+            ${c.status === 'inprogress' ? '▶ استكمل' : c.status === 'completed' ? '✅ راجع' : '🔒 مقفول'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function handleCourseClick(id) {
+  const c = COURSES.find(x => x.id === id);
+  if (c.status === 'locked') {
+    showToast('🔒 هذا الكورس يتطلب اشتراك', 'red');
+    return;
+  }
+  window.location.href = `player.html?course=${id}`;
+}
+
+// ── CONTINUE BAR ──
+setTimeout(() => {
+  document.getElementById('continueBar').style.width = '65%';
+}, 500);
+
+function goToPlayer() {
+  window.location.href = 'player.html?course=2';
+}
+
+// ── FILTERS ──
+function setFilter(btn, val) {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = val;
+  renderCourses();
+}
+
+function applyCategoryFilter() {
+  activeCategory = document.getElementById('categoryFilter').value;
+  renderCourses();
+}
+
+function setView(v) {
+  activeView = v;
+  const grid = document.getElementById('coursesGrid');
+  document.getElementById('gridBtn').classList.toggle('active', v === 'grid');
+  document.getElementById('listBtn').classList.toggle('active', v === 'list');
+  grid.classList.toggle('list-view', v === 'list');
+}
+
+// ── SEARCH ──
+document.getElementById('searchInput').addEventListener('input', renderCourses);
+
+// ── TOAST ──
+function showToast(msg, type = 'gold') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── MOBILE SIDEBAR ──
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+// ── INIT ──
+renderStats();
+renderCourses();
+</script>
+</body>
+</html>
