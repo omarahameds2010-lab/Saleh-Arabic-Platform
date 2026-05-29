@@ -1,1 +1,1607 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المتصدرين | صالح العربي - منصة النخبة التعليمية (الإعدادية والثانوية)</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================================
+               CSS Variables & Theme
+               ======================================== */
+        :root {
+            --bg-primary: #07070f;
+            --bg-secondary: #0c0c18;
+            --bg-card: #10101e;
+            --bg-glass: rgba(16, 16, 30, 0.78);
+            --accent-gold: #c9a84c;
+            --accent-gold-light: #e0c56e;
+            --accent-gold-dark: #a8892e;
+            --accent-gold-glow: rgba(201, 168, 76, 0.35);
+            --accent-teal: #0f9b8e;
+            --accent-teal-light: #14b8a6;
+            --accent-teal-glow: rgba(15, 155, 142, 0.4);
+            --accent-silver: #a8b4c0;
+            --accent-bronze: #c08a5c;
+            --text-primary: #f0ede8;
+            --text-secondary: #8a8799;
+            --text-muted: #5c5a6b;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-gold: rgba(201, 168, 76, 0.3);
+            --border-teal: rgba(15, 155, 142, 0.25);
+            --shadow-card: 0 4px 28px rgba(0, 0, 0, 0.45);
+            --shadow-gold: 0 0 36px rgba(201, 168, 76, 0.18);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --font-arabic: 'Cairo', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --sidebar-width: 260px;
+            --topbar-height: 64px;
+            --transition-fast: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --z-sidebar: 100;
+            --z-topbar: 90;
+            --z-floating: 80;
+            --z-overlay: 110;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Reset & Base */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            font-size: 16px;
+        }
+        body {
+            font-family: var(--font-arabic);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            direction: rtl;
+            -webkit-tap-highlight-color: transparent;
+        }
+        a,
+        button {
+            cursor: pointer;
+            font-family: inherit;
+        }
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--accent-teal-light);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* Ambient Background */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            opacity: 0.7;
+        }
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            will-change: transform;
+        }
+        .ambient-orb--gold {
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, var(--accent-gold) 0%, transparent 70%);
+            opacity: 0.1;
+            top: -8%;
+            right: -6%;
+            animation: orbFloatGold 22s ease-in-out infinite;
+        }
+        .ambient-orb--teal {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-teal) 0%, transparent 70%);
+            opacity: 0.09;
+            bottom: -10%;
+            left: -5%;
+            animation: orbFloatTeal 20s ease-in-out infinite;
+        }
+        @keyframes orbFloatGold {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(35px, -25px) scale(1.12);
+            }
+            66% {
+                transform: translate(-18px, 20px) scale(0.92);
+            }
+        }
+        @keyframes orbFloatTeal {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(-30px, -20px) scale(1.1);
+            }
+            66% {
+                transform: translate(25px, 18px) scale(0.93);
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ambient-orb--gold,
+            .ambient-orb--teal {
+                animation: none;
+            }
+        }
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.02;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+            background-size: 64px 64px;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex: 1;
+            margin-right: var(--sidebar-width);
+            position: relative;
+            z-index: 1;
+            transition: margin-right var(--transition-smooth);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-subtle);
+            z-index: var(--z-sidebar);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.06) transparent;
+            transition: transform var(--transition-smooth);
+        }
+        .sidebar::-webkit-scrollbar {
+            width: 3px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+        }
+        .sidebar-logo {
+            padding: 20px 20px 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-subtle);
+            flex-shrink: 0;
+        }
+        .sidebar-logo .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 6px;
+            box-shadow: var(--shadow-gold);
+        }
+        .sidebar-logo .logo-text {
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: var(--text-primary);
+            display: block;
+        }
+        .sidebar-logo .logo-subtitle {
+            font-size: 0.66rem;
+            color: var(--text-muted);
+        }
+        .sidebar-profile {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-profile .avatar-ring {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            padding: 2px;
+            background: conic-gradient(var(--accent-gold) 0deg 260deg, rgba(255, 255, 255, 0.08) 260deg 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sidebar-profile .avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--accent-gold);
+        }
+        .sidebar-profile .profile-name {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sidebar-profile .profile-level {
+            font-size: 0.68rem;
+            color: var(--accent-gold-light);
+            font-weight: 500;
+        }
+        .sidebar-xp {
+            padding: 10px 16px 12px;
+            border-bottom: 1px solid var(--border-subtle);
+            flex-shrink: 0;
+        }
+        .sidebar-xp .xp-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .sidebar-xp .xp-bar-track {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .sidebar-xp .xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 10px;
+            transition: width 1.2s ease;
+            width: 72%;
+        }
+        .sidebar-nav {
+            flex: 1;
+            padding: 6px 10px;
+        }
+        .sidebar-nav .nav-label {
+            font-size: 0.63rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 10px 10px 5px;
+            font-weight: 600;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: background var(--transition-fast), color var(--transition-fast);
+            margin-bottom: 1px;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(201, 168, 76, 0.08);
+            color: var(--accent-gold-light);
+            font-weight: 700;
+            box-shadow: inset 3px 0 0 var(--accent-gold);
+        }
+        .sidebar-nav a .nav-icon {
+            font-size: 1.05rem;
+            width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .sidebar-streak {
+            padding: 10px 14px;
+            border-top: 1px solid var(--border-subtle);
+            margin: 6px 10px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 120, 50, 0.03);
+            border: 1px solid rgba(255, 120, 50, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-streak .streak-fire {
+            font-size: 1.4rem;
+        }
+        .sidebar-streak .streak-days {
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: #ff7832;
+        }
+        .sidebar-streak .streak-label {
+            font-size: 0.62rem;
+            color: var(--text-muted);
+        }
+
+        /* Topbar */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: var(--z-topbar);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 24px;
+            background: rgba(12, 12, 24, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            gap: 12px;
+            flex-wrap: wrap;
+            min-height: var(--topbar-height);
+        }
+        .topbar-title-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .topbar-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.4px;
+            white-space: nowrap;
+        }
+        .topbar-subtitle {
+            font-size: 0.72rem;
+            color: var(--accent-teal-light);
+            font-weight: 500;
+            white-space: nowrap;
+            background: rgba(15, 155, 142, 0.08);
+            padding: 4px 10px;
+            border-radius: 18px;
+            border: 1px solid var(--border-teal);
+        }
+        .topbar-rank-badge {
+            background: linear-gradient(135deg, rgba(201, 168, 76, 0.13), rgba(201, 168, 76, 0.04));
+            border: 1px solid var(--border-gold);
+            border-radius: 18px;
+            padding: 5px 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--accent-gold-light);
+            white-space: nowrap;
+        }
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .topbar-search {
+            position: relative;
+        }
+        .topbar-search input {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 22px;
+            padding: 8px 32px 8px 14px;
+            color: var(--text-primary);
+            font-family: var(--font-arabic);
+            font-size: 0.8rem;
+            width: 200px;
+            transition: all var(--transition-fast);
+            outline: none;
+        }
+        .topbar-search input:focus {
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 0 3px rgba(15, 155, 142, 0.08);
+            width: 230px;
+        }
+        .topbar-search .search-icon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+        .topbar-filter-select {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 22px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-family: var(--font-arabic);
+            font-size: 0.78rem;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8799' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 10px center;
+            padding-left: 30px;
+        }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.4rem;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        /* Hero */
+        .hero-section {
+            padding: 30px 24px 22px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .hero-crown {
+            font-size: 3.5rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 26px rgba(201, 168, 76, 0.5));
+            margin-bottom: 4px;
+        }
+        .hero-headline {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: -0.8px;
+            background: linear-gradient(180deg, #ffffff 15%, var(--accent-gold-light) 55%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        .hero-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+        }
+        .hero-stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+        .hero-stat-value {
+            font-family: var(--font-mono);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-gold-light);
+        }
+        .hero-stat-value.teal {
+            color: var(--accent-teal-light);
+        }
+        .hero-stat-label {
+            font-size: 0.66rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .hero-live-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            margin-left: 3px;
+        }
+
+        /* Podium */
+        .podium-section {
+            padding: 28px 24px 16px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .podium-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 18px 16px 16px;
+            text-align: center;
+            transition: transform var(--transition-bounce), box-shadow var(--transition-smooth);
+            min-width: 130px;
+            max-width: 190px;
+            flex: 1;
+        }
+        .podium-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-card);
+        }
+        .podium-card--gold {
+            order: 2;
+            flex: 1.35;
+            max-width: 230px;
+            border-color: var(--border-gold);
+            box-shadow: var(--shadow-gold);
+            background: rgba(20, 16, 8, 0.82);
+            z-index: 2;
+            padding-top: 30px;
+            position: relative;
+        }
+        .podium-card--gold::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: var(--radius-lg);
+            padding: 1px;
+            background: linear-gradient(180deg, var(--accent-gold-light), transparent 55%);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
+            pointer-events: none;
+        }
+        .podium-card--gold .podium-crown {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            filter: drop-shadow(0 0 16px rgba(201, 168, 76, 0.6));
+        }
+        .podium-card--silver {
+            order: 1;
+            border-color: rgba(168, 180, 192, 0.25);
+        }
+        .podium-card--bronze {
+            order: 3;
+            border-color: rgba(192, 138, 92, 0.25);
+        }
+        .podium-rank {
+            font-family: var(--font-mono);
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+        .podium-rank--gold {
+            color: var(--accent-gold);
+            text-shadow: 0 0 26px var(--accent-gold-glow);
+        }
+        .podium-rank--silver {
+            color: var(--accent-silver);
+        }
+        .podium-rank--bronze {
+            color: var(--accent-bronze);
+        }
+        .podium-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            margin: 6px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #fff;
+        }
+        .podium-card--gold .podium-avatar {
+            width: 58px;
+            height: 58px;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #5c3d0e, #c9a84c, #e0c56e);
+            box-shadow: 0 0 22px rgba(201, 168, 76, 0.45);
+        }
+        .podium-card--silver .podium-avatar {
+            background: linear-gradient(135deg, #4a5568, #a8b4c0);
+        }
+        .podium-card--bronze .podium-avatar {
+            background: linear-gradient(135deg, #5c3a1e, #c08a5c);
+        }
+        .podium-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin: 3px 0;
+        }
+        .podium-xp {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-teal-light);
+        }
+        .podium-streak {
+            font-size: 0.66rem;
+            color: var(--text-muted);
+        }
+
+        /* Filters */
+        .filters-section {
+            padding: 6px 24px 14px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .filter-chip {
+            padding: 7px 14px;
+            border-radius: 18px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            font-family: var(--font-arabic);
+        }
+        .filter-chip:hover {
+            border-color: rgba(255, 255, 255, 0.18);
+            color: var(--text-primary);
+        }
+        .filter-chip.active {
+            background: rgba(201, 168, 76, 0.1);
+            border-color: var(--border-gold);
+            color: var(--accent-gold-light);
+            box-shadow: 0 0 10px rgba(201, 168, 76, 0.1);
+        }
+
+        /* Ranking Table */
+        .ranking-section {
+            padding: 6px 24px 20px;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-subtle);
+        }
+        .ranking-table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.05) transparent;
+        }
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+            font-size: 0.82rem;
+        }
+        .ranking-table thead th {
+            background: rgba(12, 12, 24, 0.9);
+            padding: 12px 10px;
+            text-align: right;
+            font-weight: 700;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+        }
+        .ranking-table tbody tr {
+            transition: background var(--transition-fast);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.025);
+        }
+        .ranking-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.015);
+        }
+        .ranking-table tbody tr.current-user-row {
+            background: rgba(201, 168, 76, 0.05) !important;
+            border-right: 3px solid var(--accent-gold);
+        }
+        .ranking-table tbody td {
+            padding: 10px 10px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        .rank-cell {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-align: center;
+            width: 45px;
+        }
+        .rank-cell.top-rank {
+            color: var(--accent-gold);
+        }
+        .rank-change-up {
+            color: #22c55e;
+            font-size: 0.6rem;
+            margin-right: 2px;
+        }
+        .rank-change-down {
+            color: #ef4444;
+            font-size: 0.6rem;
+            margin-right: 2px;
+        }
+        .student-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        .student-cell .mini-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: #fff;
+        }
+        .xp-cell {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--accent-teal-light);
+            font-size: 0.82rem;
+        }
+        .streak-cell {
+            font-weight: 600;
+            color: #ff7832;
+        }
+        .accuracy-high {
+            color: #22c55e;
+        }
+        .accuracy-mid {
+            color: #eab308;
+        }
+        .table-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .badge-legend {
+            background: rgba(201, 168, 76, 0.12);
+            color: var(--accent-gold-light);
+            border: 1px solid rgba(201, 168, 76, 0.2);
+        }
+        .badge-elite {
+            background: rgba(15, 155, 142, 0.12);
+            color: var(--accent-teal-light);
+            border: 1px solid rgba(15, 155, 142, 0.2);
+        }
+        .badge-rising {
+            background: rgba(168, 180, 192, 0.1);
+            color: var(--accent-silver);
+            border: 1px solid rgba(168, 180, 192, 0.18);
+        }
+        .load-more-btn {
+            display: block;
+            margin: 14px auto 0;
+            padding: 10px 28px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-subtle);
+            border-radius: 22px;
+            color: var(--text-secondary);
+            font-family: var(--font-arabic);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .load-more-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+        }
+
+        /* Achievements */
+        .achievements-section {
+            padding: 6px 24px 20px;
+        }
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .achievement-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px 14px;
+            transition: transform var(--transition-bounce), box-shadow var(--transition-smooth);
+            cursor: pointer;
+            text-align: center;
+        }
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-card);
+        }
+        .achievement-card--legendary {
+            border-color: rgba(201, 168, 76, 0.25);
+        }
+        .achievement-card--epic {
+            border-color: rgba(168, 80, 200, 0.22);
+        }
+        .achievement-card--rare {
+            border-color: rgba(15, 155, 142, 0.22);
+        }
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .achievement-title {
+            font-weight: 700;
+            font-size: 0.84rem;
+            margin-bottom: 2px;
+        }
+        .achievement-desc {
+            font-size: 0.66rem;
+            color: var(--text-muted);
+        }
+
+        /* Floating Profile Card */
+        .floating-profile-card {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: var(--z-floating);
+            background: var(--bg-glass);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--border-gold);
+            border-radius: var(--radius-lg);
+            padding: 16px 14px;
+            width: 220px;
+            box-shadow: var(--shadow-gold), var(--shadow-card);
+            transition: transform var(--transition-smooth);
+        }
+        .floating-profile-card .fpc-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .fpc-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #fff;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .fpc-name {
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .fpc-rank {
+            font-size: 0.66rem;
+            color: var(--accent-gold-light);
+            font-weight: 600;
+        }
+        .fpc-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            margin-bottom: 6px;
+        }
+        .fpc-stat {
+            background: rgba(255, 255, 255, 0.015);
+            border-radius: var(--radius-sm);
+            padding: 5px 6px;
+            text-align: center;
+        }
+        .fpc-stat-value {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: var(--accent-teal-light);
+        }
+        .fpc-stat-label {
+            font-size: 0.58rem;
+            color: var(--text-muted);
+        }
+        .fpc-motivation {
+            font-size: 0.64rem;
+            color: var(--accent-gold-light);
+            text-align: center;
+            font-weight: 600;
+            padding: 7px;
+            background: rgba(201, 168, 76, 0.05);
+            border-radius: var(--radius-sm);
+            border: 1px dashed rgba(201, 168, 76, 0.18);
+        }
+
+        /* Live Activity Feed */
+        .activity-feed-section {
+            padding: 6px 24px 24px;
+        }
+        .activity-feed {
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 12px 16px;
+            max-height: 240px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.04) transparent;
+        }
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.025);
+            font-size: 0.74rem;
+            color: var(--text-secondary);
+        }
+        .activity-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .activity-dot.gold {
+            background: var(--accent-gold);
+        }
+        .activity-dot.teal {
+            background: var(--accent-teal);
+        }
+        .activity-dot.green {
+            background: #22c55e;
+        }
+        .activity-time {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            margin-right: auto;
+        }
+
+        /* Motivation Banner */
+        .motivation-banner {
+            margin: 0 24px 16px;
+            padding: 12px 18px;
+            background: linear-gradient(135deg, rgba(201, 168, 76, 0.06), rgba(15, 155, 142, 0.04));
+            border: 1px solid rgba(201, 168, 76, 0.18);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.84rem;
+            color: var(--accent-gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: calc(var(--z-sidebar) - 1);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(100%);
+                box-shadow: -6px 0 26px rgba(0, 0, 0, 0.5);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+            .main-content {
+                margin-right: 0;
+            }
+            .mobile-menu-btn {
+                display: flex;
+            }
+            .hero-headline {
+                font-size: 1.3rem;
+            }
+            .topbar-search input {
+                width: 140px;
+            }
+            .topbar-search input:focus {
+                width: 160px;
+            }
+            .ranking-table {
+                min-width: 600px;
+                font-size: 0.74rem;
+            }
+            .podium-section {
+                gap: 8px;
+            }
+            .podium-card {
+                min-width: 100px;
+                padding: 12px 8px;
+            }
+            .podium-card--gold {
+                max-width: 160px;
+            }
+            .floating-profile-card {
+                display: none;
+            }
+        }
+        @media (max-width: 640px) {
+            .topbar {
+                padding: 8px 12px;
+                gap: 6px;
+            }
+            .hero-headline {
+                font-size: 1.05rem;
+            }
+            .podium-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            .podium-card {
+                max-width: 90% !important;
+                width: 90%;
+                flex: none;
+                order: unset !important;
+            }
+            .podium-card--gold {
+                order: -1 !important;
+                padding-top: 28px;
+            }
+            .ranking-table {
+                min-width: 500px;
+                font-size: 0.66rem;
+            }
+            .achievements-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .motivation-banner {
+                margin: 0 10px 12px;
+                font-size: 0.7rem;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg" aria-hidden="true">
+        <div class="ambient-orb ambient-orb--gold"></div>
+        <div class="ambient-orb ambient-orb--teal"></div>
+    </div>
+    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar" role="navigation" aria-label="القائمة الرئيسية">
+            <div class="sidebar-logo">
+                <div class="logo-icon" aria-hidden="true">📚</div>
+                <span class="logo-text">صالح العربي</span>
+                <span class="logo-subtitle">منصة الإعدادية والثانوية</span>
+            </div>
+            <div class="sidebar-profile">
+                <div class="avatar-ring"><div class="avatar-inner">أح</div></div>
+                <div>
+                    <div class="profile-name">أحمد محمود</div>
+                    <div class="profile-level">🏅 المستوى 15</div>
+                </div>
+            </div>
+            <div class="sidebar-xp">
+                <div class="xp-header"><span>XP: 8,500</span><span>المستوى 16: 10,000</span></div>
+                <div class="xp-bar-track"><div class="xp-bar-fill" style="width:72%;"></div></div>
+            </div>
+            <nav class="sidebar-nav" aria-label="التنقل الرئيسي">
+                <span class="nav-label">القائمة</span>
+                <a href="#"><span class="nav-icon">📊</span> لوحة التحكم</a>
+                <a href="#" class="active" aria-current="page"><span class="nav-icon">🏆</span> المتصدرين</a>
+                <a href="#"><span class="nav-icon">📝</span> الاختبارات</a>
+                <a href="#"><span class="nav-icon">📖</span> الدورات</a>
+                <a href="#"><span class="nav-icon">📈</span> التقارير</a>
+                <a href="#"><span class="nav-icon">⚙️</span> الإعدادات</a>
+            </nav>
+            <div class="sidebar-streak">
+                <span class="streak-fire">🔥</span>
+                <div>
+                    <div class="streak-days">14 يوم</div>
+                    <div class="streak-label">أفضل سلسلة: 21 يوم</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content" id="mainContent">
+            <header class="topbar" role="banner">
+                <div class="topbar-title-section">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="فتح القائمة">☰</button>
+                    <h1 class="topbar-title">🏆 المتصدرين</h1>
+                    <span class="topbar-subtitle">الإعدادية والثانوية</span>
+                </div>
+                <div class="topbar-rank-badge" id="topbarRankBadge" aria-live="polite">🔥 ضمن أفضل 5%</div>
+                <div class="topbar-actions">
+                    <div class="topbar-search">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="ابحث عن طالب..." aria-label="البحث عن طالب">
+                    </div>
+                    <select class="topbar-filter-select" id="gradeFilter" aria-label="تصفية حسب الصف الدراسي">
+                        <option value="all">كل الصفوف</option>
+                        <option value="الأول الإعدادي">الأول الإعدادي</option>
+                        <option value="الثاني الإعدادي">الثاني الإعدادي</option>
+                        <option value="الثالث الإعدادي">الثالث الإعدادي</option>
+                        <option value="الأول الثانوي">الأول الثانوي</option>
+                        <option value="الثاني الثانوي">الثاني الثانوي</option>
+                        <option value="الثالث الثانوي">الثالث الثانوي</option>
+                    </select>
+                </div>
+            </header>
+
+            <section class="hero-section" aria-labelledby="heroHeadline">
+                <div class="hero-crown" aria-hidden="true">👑</div>
+                <h2 class="hero-headline" id="heroHeadline">ساحة المتفوقين — النخبة من الإعدادية والثانوية</h2>
+                <p class="hero-subtitle">الموسم الثالث · المنافسة تشتعل في جميع المراحل</p>
+                <div class="hero-stats-row">
+                    <div><div class="hero-stat-value" id="counterStudents">12,483</div><div class="hero-stat-label">طالب</div></div>
+                    <div><div class="hero-stat-value teal" id="counterExams">89,420</div><div class="hero-stat-label">اختبار</div></div>
+                    <div><div class="hero-stat-value">3</div><div class="hero-stat-label">الموسم</div></div>
+                    <div><div class="hero-stat-value teal"><span class="hero-live-dot"></span>مباشر</div><div class="hero-stat-label">تحديثات</div></div>
+                </div>
+            </section>
+
+            <div class="motivation-banner" id="motivationBanner" aria-live="polite">
+                <span>⚡</span> <span id="motivationText">باقي 120 XP للوصول إلى المركز #19 — استمر!</span>
+            </div>
+
+            <section class="podium-section" aria-labelledby="podiumHeading">
+                <h3 class="sr-only" id="podiumHeading">المراكز الثلاثة الأولى</h3>
+                <div class="podium-card podium-card--silver">
+                    <div class="podium-rank podium-rank--silver">2</div>
+                    <div class="podium-avatar">فم</div>
+                    <div class="podium-name">فاطمة محمد</div>
+                    <div class="podium-xp">22,300 XP</div>
+                    <div class="podium-streak">🔥 48 يوم</div>
+                </div>
+                <div class="podium-card podium-card--gold">
+                    <div class="podium-crown" aria-hidden="true">👑</div>
+                    <div class="podium-rank podium-rank--gold">1</div>
+                    <div class="podium-avatar">يس</div>
+                    <div class="podium-name">يوسف أحمد</div>
+                    <div class="podium-xp">24,850 XP</div>
+                    <div class="podium-streak">🔥 62 يوم</div>
+                </div>
+                <div class="podium-card podium-card--bronze">
+                    <div class="podium-rank podium-rank--bronze">3</div>
+                    <div class="podium-avatar">عم</div>
+                    <div class="podium-name">عمر خالد</div>
+                    <div class="podium-xp">20,150 XP</div>
+                    <div class="podium-streak">🔥 35 يوم</div>
+                </div>
+            </section>
+
+            <div class="filters-section" role="group" aria-label="تصفية المتصدرين">
+                <button class="filter-chip active" data-filter="all">🏆 كل الوقت</button>
+                <button class="filter-chip" data-filter="week">📅 هذا الأسبوع</button>
+                <button class="filter-chip" data-filter="month">📆 هذا الشهر</button>
+                <button class="filter-chip" data-filter="القاهرة">📍 القاهرة</button>
+                <button class="filter-chip" data-filter="الجيزة">📍 الجيزة</button>
+                <button class="filter-chip" data-filter="الإسكندرية">📍 الإسكندرية</button>
+                <button class="filter-chip" data-filter="الدقهلية">📍 الدقهلية</button>
+            </div>
+
+            <section class="ranking-section" aria-labelledby="rankingTitle">
+                <h3 class="section-title" id="rankingTitle">📋 الترتيب العالمي</h3>
+                <div class="ranking-table-wrapper" role="table" aria-label="جدول المتصدرين">
+                    <table class="ranking-table">
+                        <thead><tr><th scope="col">المركز</th><th scope="col">الطالب</th><th scope="col">XP</th><th scope="col">الدروس</th><th scope="col">الاختبارات</th><th scope="col">الدقة</th><th scope="col">التتابع</th><th scope="col">الشارة</th></tr></thead>
+                        <tbody id="rankingTableBody"></tbody>
+                    </table>
+                </div>
+                <button class="load-more-btn" id="loadMoreBtn">عرض المزيد ↓</button>
+            </section>
+
+            <section class="achievements-section" aria-labelledby="achievementsTitle">
+                <h3 class="section-title" id="achievementsTitle">🎖️ أوسمة التميز</h3>
+                <div class="achievements-grid">
+                    <div class="achievement-card achievement-card--legendary"><span class="achievement-icon">🔥</span><div class="achievement-title">أسطورة المذاكرة</div><div class="achievement-desc">60 يوم تتابع</div></div>
+                    <div class="achievement-card achievement-card--epic"><span class="achievement-icon">⚡</span><div class="achievement-title">أسرع متقدم</div><div class="achievement-desc">صعد 10 مراكز في أسبوع</div></div>
+                    <div class="achievement-card achievement-card--legendary"><span class="achievement-icon">🏆</span><div class="achievement-title">ملك الامتحانات</div><div class="achievement-desc">50 اختباراً بنجاح</div></div>
+                    <div class="achievement-card achievement-card--rare"><span class="achievement-icon">📚</span><div class="achievement-title">سيد النحو</div><div class="achievement-desc">دقة 100% في النحو</div></div>
+                    <div class="achievement-card achievement-card--epic"><span class="achievement-icon">🎯</span><div class="achievement-title">دقة خارقة</div><div class="achievement-desc">نسبة دقة 98%+</div></div>
+                    <div class="achievement-card achievement-card--rare"><span class="achievement-icon">🌟</span><div class="achievement-title">النجم الصاعد</div><div class="achievement-desc">المركز الأول شهرياً</div></div>
+                </div>
+            </section>
+
+            <section class="activity-feed-section" aria-labelledby="activityTitle">
+                <h3 class="section-title" id="activityTitle">📡 آخر النشاطات</h3>
+                <div class="activity-feed" id="activityFeed" aria-live="polite"></div>
+            </section>
+        </main>
+    </div>
+
+    <div class="floating-profile-card" id="floatingProfileCard" aria-label="بطاقتك الشخصية">
+        <div class="fpc-header">
+            <div class="fpc-avatar">أح</div>
+            <div><div class="fpc-name">أحمد محمود</div><div class="fpc-rank">🏅 المركز #20</div></div>
+        </div>
+        <div class="fpc-stats">
+            <div class="fpc-stat"><div class="fpc-stat-value">8,500</div><div class="fpc-stat-label">XP</div></div>
+            <div class="fpc-stat"><div class="fpc-stat-value">14</div><div class="fpc-stat-label">يوم 🔥</div></div>
+            <div class="fpc-stat"><div class="fpc-stat-value">45</div><div class="fpc-stat-label">درس</div></div>
+            <div class="fpc-stat"><div class="fpc-stat-value">87%</div><div class="fpc-stat-label">دقة</div></div>
+        </div>
+        <div class="fpc-motivation">⚡ باقي 120 XP للمركز #19</div>
+    </div>
+
+    <script>
+        (function() {
+            // ========== STATE STORE ==========
+            const Store = {
+                _state: {
+                    allStudents: [],
+                    filteredCache: null,
+                    cacheKey: '',
+                    activeFilter: 'all',
+                    activeGrade: 'all',
+                    searchQuery: '',
+                    currentUser: null,
+                    pageSize: 15,
+                    currentPage: 1,
+                    isRendering: false,
+                },
+                getState() { return this._state; },
+                setState(key, value) {
+                    this._state[key] = value;
+                    if (['activeFilter', 'activeGrade', 'searchQuery'].includes(key)) {
+                        this._state.filteredCache = null;
+                        this._state.cacheKey = '';
+                        this._state.currentPage = 1;
+                    }
+                },
+                getCacheKey() { return `${this._state.activeFilter}|${this._state.activeGrade}|${this._state.searchQuery}`; },
+                getFilteredStudents() {
+                    const key = this.getCacheKey();
+                    if (this._state.filteredCache && this._state.cacheKey === key) return this._state.filteredCache;
+                    let filtered = [...this._state.allStudents];
+                    const { activeGrade, activeFilter, searchQuery } = this._state;
+                    if (activeGrade !== 'all') filtered = filtered.filter(s => s.grade === activeGrade);
+                    if (!['all', 'week', 'month'].includes(activeFilter)) filtered = filtered.filter(s => s.governorate === activeFilter);
+                    if (activeFilter === 'week') {
+                        filtered = filtered.map(s => ({ ...s, xp: Math.round(s.xp * 0.25), rank: 0 }));
+                        filtered.sort((a, b) => b.xp - a.xp);
+                        filtered.forEach((s, i) => { s.rank = i + 1; });
+                    } else if (activeFilter === 'month') {
+                        filtered = filtered.map(s => ({ ...s, xp: Math.round(s.xp * 0.55), rank: 0 }));
+                        filtered.sort((a, b) => b.xp - a.xp);
+                        filtered.forEach((s, i) => { s.rank = i + 1; });
+                    }
+                    if (searchQuery.trim()) {
+                        const q = searchQuery.trim().toLowerCase();
+                        filtered = filtered.filter(s => s.name.toLowerCase().includes(q));
+                    }
+                    this._state.filteredCache = filtered;
+                    this._state.cacheKey = key;
+                    return filtered;
+                },
+                invalidateCache() { this._state.filteredCache = null; this._state.cacheKey = ''; },
+            };
+
+            // ========== DATA (includes preparatory grades) ==========
+            const governorates = ['القاهرة', 'الجيزة', 'الإسكندرية', 'الدقهلية', 'الشرقية', 'البحيرة', 'المنيا', 'سوهاج', 'أسيوط', 'القليوبية'];
+            const grades = ['الأول الإعدادي', 'الثاني الإعدادي', 'الثالث الإعدادي', 'الأول الثانوي', 'الثاني الثانوي', 'الثالث الثانوي'];
+
+            function generateStudentData() {
+                const names = [
+                    'يوسف أحمد', 'فاطمة محمد', 'عمر خالد', 'مريم حسن', 'خالد محمود', 'نورهان إبراهيم', 'مصطفى علي',
+                    'آية سعيد', 'إبراهيم خليل', 'سارة عبدالله', 'محمد طارق', 'دعاء مصطفى', 'أحمد فتحي', 'منة الله رضا',
+                    'حسن عبدالرحمن', 'شهد وائل', 'كريم أسامة', 'ندى عماد', 'عمرو جمال', 'أحمد محمود',
+                    'رانيا هشام', 'محمود سامي', 'هبة الله أحمد', 'طارق نبيل', 'ياسمين كمال', 'عبدالله سالم',
+                    'بسمة محمد', 'وليد سعد', 'إسراء علاء', 'جمال عبدالناصر', 'سماح فؤاد', 'أشرف زكي',
+                    'لمياء حسن', 'هاني شريف', 'غادة إيهاب', 'رامي عادل', 'نسمة محسن', 'زياد توفيق',
+                    'أمل جابر', 'شريف ماهر', 'مروة صلاح', 'عماد فاروق', 'سلمى رشاد', 'أكرم ياسر',
+                    'هدى مجدي', 'باسل نادر', 'لينا أشرف', 'أيمن قدري', 'نادين سامح', 'فريد وجيه',
+                    'رقية هاني', 'سيف الدين محمد', 'جنى عماد', 'علاء حمدي',
+                ];
+                return names.map((name, index) => {
+                    const gov = governorates[index % governorates.length];
+                    const grade = grades[index % grades.length];
+                    const isCurrentUser = name === 'أحمد محمود';
+                    let xp, accuracy, streak, lessons, exams;
+                    if (index === 0) { xp = 24850;
+                        accuracy = 98;
+                        streak = 62;
+                        lessons = 120;
+                        exams = 35; } else if (index === 1) { xp = 22300;
+                        accuracy = 97;
+                        streak = 48;
+                        lessons = 108;
+                        exams = 32; } else if (index === 2) { xp = 20150;
+                        accuracy = 95;
+                        streak = 35;
+                        lessons = 95;
+                        exams = 30; } else if (isCurrentUser) { xp = 8500;
+                        accuracy = 87;
+                        streak = 14;
+                        lessons = 45;
+                        exams = 12; } else if (index < 10) { xp = 18500 - index * 700;
+                        accuracy = 92 - Math.floor(Math.random() * 5);
+                        streak = 28 + Math.floor(Math.random() * 18);
+                        lessons = 75 + Math.floor(Math.random() * 30);
+                        exams = 20 + Math.floor(Math.random() * 10); } else if (index < 25) { xp = 12000 - (index - 10) * 380;
+                        accuracy = 84 + Math.floor(Math.random() * 8);
+                        streak = 7 + Math.floor(Math.random() * 18);
+                        lessons = 38 + Math.floor(Math.random() * 38);
+                        exams = 9 + Math.floor(Math.random() * 14); } else { xp = Math.max(500, 5000 - (index - 25) * 140);
+                        accuracy = 68 + Math.floor(Math.random() * 18);
+                        streak = 1 + Math.floor(Math.random() * 10);
+                        lessons = 8 + Math.floor(Math.random() * 30);
+                        exams = 2 + Math.floor(Math.random() * 10); }
+                    xp = Math.max(400, xp + Math.floor(Math.random() * 160 - 80));
+                    accuracy = Math.min(99, Math.max(55, accuracy));
+                    streak = Math.max(1, streak);
+                    lessons = Math.max(3, lessons);
+                    exams = Math.max(1, exams);
+                    const level = Math.floor(xp / 600) + 1;
+                    const rankChange = Math.floor(Math.random() * 5) - 2;
+                    let badgeType = 'badge-rising',
+                        badgeText = '🌟 صاعد';
+                    if (index < 5) { badgeType = 'badge-legend';
+                        badgeText = '👑 أسطورة'; } else if (index < 15) { badgeType = 'badge-elite';
+                        badgeText = '💎 نخبة'; }
+                    return { id: index, name, governorate: gov, grade, xp, completedLessons: lessons, exams, accuracy,
+                        streak, level, rankChange, badgeType, badgeText, isCurrentUser, rank: 0 };
+                }).sort((a, b) => b.xp - a.xp).map((s, i) => { s.rank = i + 1; return s; });
+            }
+
+            Store._state.allStudents = generateStudentData();
+            Store._state.currentUser = Store._state.allStudents.find(s => s.isCurrentUser);
+
+            // DOM
+            const DOM = {
+                rankingBody: document.getElementById('rankingTableBody'),
+                searchInput: document.getElementById('searchInput'),
+                gradeFilter: document.getElementById('gradeFilter'),
+                filterChips: document.querySelectorAll('.filter-chip'),
+                motivationText: document.getElementById('motivationText'),
+                activityFeed: document.getElementById('activityFeed'),
+                mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+                sidebar: document.getElementById('sidebar'),
+                sidebarOverlay: document.getElementById('sidebarOverlay'),
+                loadMoreBtn: document.getElementById('loadMoreBtn'),
+                topbarRankBadge: document.getElementById('topbarRankBadge'),
+            };
+
+            function debounce(fn, delay) { let t; return function(...a) { clearTimeout(t);
+                    t = setTimeout(() => fn.apply(this, a), delay); }; }
+
+            function renderSingleRow(student) {
+                const tr = document.createElement('tr');
+                if (student.isCurrentUser) tr.classList.add('current-user-row');
+                const rankClass = student.rank <= 3 ? ' top-rank' : '';
+                const accuracyClass = student.accuracy >= 95 ? 'accuracy-high' : student.accuracy >= 80 ? 'accuracy-mid' : '';
+                let rankChangeHTML = '';
+                if (student.rankChange > 0) rankChangeHTML = `<span class="rank-change-up">▲${Math.abs(student.rankChange)}</span>`;
+                else if (student.rankChange < 0) rankChangeHTML = `<span class="rank-change-down">▼${Math.abs(student.rankChange)}</span>`;
+                const hue = (student.id * 47 + 180) % 360;
+                const avatarBg = `hsl(${hue}, 42%, 32%)`;
+                const initials = student.name.split(' ').map(n => n[0]).join('');
+                tr.innerHTML = `<td class="rank-cell${rankClass}">${rankChangeHTML}#${student.rank}</td>
+                    <td><div class="student-cell"><div class="mini-avatar" style="background:${avatarBg};">${initials}</div>${student.name}${student.isCurrentUser ? ' <span style="font-size:0.62rem;color:var(--accent-gold-light);">(أنت)</span>' : ''}</div></td>
+                    <td class="xp-cell">${student.xp.toLocaleString()}</td><td>${student.completedLessons}</td><td>${student.exams}</td>
+                    <td class="${accuracyClass}">${student.accuracy}%</td><td class="streak-cell">🔥 ${student.streak}</td>
+                    <td><span class="table-badge ${student.badgeType}">${student.badgeText}</span></td>`;
+                return tr;
+            }
+
+            function renderRankingTable(resetScroll = true) {
+                if (Store._state.isRendering) return;
+                Store._state.isRendering = true;
+                const filtered = Store.getFilteredStudents();
+                const { pageSize, currentPage } = Store._state;
+                const visible = filtered.slice(0, currentPage * pageSize);
+                const fragment = document.createDocumentFragment();
+                visible.forEach(s => fragment.appendChild(renderSingleRow(s)));
+                DOM.rankingBody.innerHTML = '';
+                DOM.rankingBody.appendChild(fragment);
+                DOM.loadMoreBtn.style.display = visible.length >= filtered.length ? 'none' : 'block';
+                if (visible.length < filtered.length) DOM.loadMoreBtn.textContent = `عرض المزيد (${visible.length} من ${filtered.length}) ↓`;
+                updateMotivationBanner(filtered);
+                Store._state.isRendering = false;
+            }
+
+            function loadMore() {
+                Store._state.currentPage++;
+                const filtered = Store.getFilteredStudents();
+                const start = (Store._state.currentPage - 1) * Store._state.pageSize;
+                const batch = filtered.slice(start, Store._state.currentPage * Store._state.pageSize);
+                const fragment = document.createDocumentFragment();
+                batch.forEach(s => fragment.appendChild(renderSingleRow(s)));
+                DOM.rankingBody.appendChild(fragment);
+                if (Store._state.currentPage * Store._state.pageSize >= filtered.length) DOM.loadMoreBtn.style.display = 'none';
+                else DOM.loadMoreBtn.textContent = `عرض المزيد (${Store._state.currentPage * Store._state.pageSize} من ${filtered.length}) ↓`;
+                updateMotivationBanner(filtered);
+            }
+
+            function updateMotivationBanner(filtered) {
+                const user = Store._state.currentUser;
+                if (!user) return;
+                const u = filtered.find(s => s.isCurrentUser);
+                if (!u) { DOM.motivationText.textContent = 'استخدم الفلاتر للعثور على مركزك'; return; }
+                const rank = filtered.indexOf(u) + 1;
+                if (rank <= 3) DOM.motivationText.textContent = '🏆 أنت في قمة الترتيب! حافظ على مركزك';
+                else {
+                    const prev = filtered[rank - 2];
+                    const xpNeed = prev ? prev.xp - u.xp : 0;
+                    DOM.motivationText.textContent = `⚡ باقي ${xpNeed.toLocaleString()} XP للوصول إلى المركز #${rank-1} — كل درس يقربك`;
+                }
+            }
+
+            function updateActivityFeed() {
+                const pool = [
+                    { text: 'أنهى اختبار البلاغة بنسبة 98%', name: 'أحمد حسن', dot: 'gold', time: 'منذ دقيقتين' },
+                    { text: 'صعد للمركز #12', name: 'سارة محمد', dot: 'teal', time: 'منذ 5 دقائق' },
+                    { text: 'جمع 250 XP من درس النحو', name: 'يوسف علي', dot: 'green', time: 'منذ 7 دقائق' },
+                    { text: 'حقق تتابع 30 يوم', name: 'نورهان خالد', dot: 'gold', time: 'منذ 9 دقائق' },
+                    { text: 'أكمل 100 درس', name: 'مصطفى حسن', dot: 'teal', time: 'منذ 12 دقيقة' },
+                ];
+                const frag = document.createDocumentFragment();
+                pool.sort(() => Math.random() - 0.5).slice(0, 5).forEach(m => {
+                    const d = document.createElement('div');
+                    d.className = 'activity-item';
+                    d.innerHTML = `<span class="activity-dot ${m.dot}"></span><span><strong>${m.name}</strong> ${m.text}</span><span class="activity-time">${m.time}</span>`;
+                    frag.appendChild(d);
+                });
+                DOM.activityFeed.innerHTML = '';
+                DOM.activityFeed.appendChild(frag);
+            }
+
+            function simulateLiveUpdate() {
+                const all = Store._state.allStudents;
+                const candidates = all.filter((_, i) => i >= 3 && !all[i].isCurrentUser);
+                const shuffled = candidates.sort(() => Math.random() - 0.5).slice(0, 3);
+                shuffled.forEach(s => { s.xp = Math.max(400, s.xp + Math.floor(Math.random() * 160 - 30)); });
+                all.sort((a, b) => b.xp - a.xp);
+                all.forEach((s, i) => { s.rank = i + 1; });
+                Store.invalidateCache();
+                const state = Store.getState();
+                if (state.activeFilter === 'all' && state.activeGrade === 'all' && !state.searchQuery.trim()) {
+                    state.currentPage = 1;
+                    renderRankingTable();
+                }
+                const user = Store._state.currentUser;
+                if (user) {
+                    const pct = Math.round((1 - user.rank / all.length) * 100);
+                    DOM.topbarRankBadge.innerHTML = pct <= 10 ? `<span>🔥</span> ضمن أفضل ${pct}%` : `<span>📈</span> ضمن أفضل ${pct}%`;
+                }
+            }
+
+            // Events
+            DOM.searchInput.addEventListener('input', debounce(() => {
+                Store.setState('searchQuery', DOM.searchInput.value);
+                Store._state.currentPage = 1;
+                renderRankingTable();
+            }, 250));
+            DOM.gradeFilter.addEventListener('change', function() {
+                Store.setState('activeGrade', this.value);
+                Store._state.currentPage = 1;
+                renderRankingTable();
+            });
+            DOM.filterChips.forEach(chip => chip.addEventListener('click', function() {
+                DOM.filterChips.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                Store.setState('activeFilter', this.dataset.filter);
+                Store._state.currentPage = 1;
+                renderRankingTable();
+            }));
+            DOM.loadMoreBtn.addEventListener('click', loadMore);
+            DOM.mobileMenuBtn.addEventListener('click', () => {
+                const open = DOM.sidebar.classList.toggle('open');
+                DOM.sidebarOverlay.classList.toggle('active', open);
+                document.body.style.overflow = open ? 'hidden' : '';
+                DOM.mobileMenuBtn.setAttribute('aria-expanded', open);
+            });
+            DOM.sidebarOverlay.addEventListener('click', () => {
+                DOM.sidebar.classList.remove('open');
+                DOM.sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && DOM.sidebar.classList.contains('open')) { DOM.sidebar
+                        .classList.remove('open');
+                    DOM.sidebarOverlay.classList.remove('active');
+                    document.body.style.overflow = ''; } });
+
+            // Init
+            renderRankingTable();
+            updateActivityFeed();
+            setInterval(simulateLiveUpdate, 20000);
+            setInterval(updateActivityFeed, 10000);
+        })();
+    </script>
+</body>
+</html>
