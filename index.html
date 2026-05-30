@@ -1318,5 +1318,595 @@
             });
         })();
     </script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>صالح العربية | الباقات والمجتمع</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #03050a;
+            --bg-primary: #0a0f1a;
+            --bg-surface: #111827;
+            --bg-card: #1a1f2e;
+            --bg-glass: rgba(17,24,39,0.85);
+            --gold: #c9a84c;
+            --gold-light: #e0c56e;
+            --gold-dark: #a8892e;
+            --teal: #0f9b8e;
+            --teal-bright: #14b8a6;
+            --text-primary: #f0ede8;
+            --text-secondary: #a3a0b3;
+            --text-muted: #5f5c6e;
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-gold: rgba(201,168,76,0.3);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.5);
+            --shadow-gold: 0 0 40px rgba(201,168,76,0.2);
+            --radius-sm: 12px;
+            --radius-md: 18px;
+            --radius-lg: 28px;
+            --font-main: 'Cairo', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --max-width: 1200px;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+        body {
+            font-family:var(--font-main);
+            background:var(--bg-deep);
+            color:var(--text-primary);
+            line-height:1.6;
+            overflow-x:hidden;
+            min-height:100vh;
+        }
+        .ambient-bg {
+            position:fixed; inset:0; pointer-events:none; z-index:0;
+            background: radial-gradient(ellipse at 20% 30%, rgba(201,168,76,0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 70%, rgba(15,155,142,0.06) 0%, transparent 55%),
+                        radial-gradient(circle at 50% 50%, rgba(201,168,76,0.03) 0%, transparent 60%);
+        }
+        .container { max-width:var(--max-width); margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+        .section-header { text-align:center; margin:100px 0 50px; }
+        .section-title { font-size:2.5rem; font-weight:800; letter-spacing:-0.5px; margin-bottom:16px; }
+        .section-subtitle { color:var(--text-secondary); font-size:1.1rem; max-width:600px; margin:0 auto; }
+
+        /* Pricing Details */
+        .pricing-grid { display:flex; gap:30px; justify-content:center; flex-wrap:wrap; margin:60px 0; }
+        .pricing-card {
+            background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg);
+            padding:40px 30px; width:320px; transition:all var(--transition); text-align:center;
+        }
+        .pricing-card.popular { border-color:var(--border-gold); box-shadow:var(--shadow-gold); transform:scale(1.03); }
+        .pricing-card .plan { font-size:1.4rem; font-weight:700; margin-bottom:20px; }
+        .pricing-card .price { font-family:var(--font-mono); font-size:3rem; font-weight:700; color:var(--gold-light); }
+        .pricing-card ul { list-style:none; margin:20px 0; color:var(--text-secondary); }
+        .pricing-card ul li { padding:8px 0; border-bottom:1px solid var(--border-subtle); }
+        .btn {
+            padding:14px 30px; border-radius:40px; font-weight:700; background:var(--gold); color:#0a0e16;
+            border:none; cursor:pointer; font-family:var(--font-main); font-size:1rem;
+            transition:all var(--transition); display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+        }
+        .btn:hover { filter:brightness(1.15); box-shadow:0 12px 30px rgba(201,168,76,0.35); transform:translateY(-2px); }
+        .btn-outline { background:transparent; border:1px solid var(--gold); color:var(--gold-light); }
+
+        /* Success Stories */
+        .stories-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:30px; margin:60px 0; }
+        .story-card {
+            background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg);
+            padding:32px; position:relative; transition:all var(--transition);
+        }
+        .story-card:hover { border-color:var(--border-gold); transform:translateY(-5px); }
+        .story-avatar {
+            width:70px; height:70px; border-radius:50%; background:linear-gradient(135deg, #5c3d0e, #c9a84c);
+            display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:#fff; margin-bottom:20px;
+        }
+        .story-quote { font-size:1rem; color:var(--text-secondary); margin-bottom:16px; }
+        .story-name { font-weight:700; color:var(--gold-light); }
+
+        /* App Download */
+        .app-download {
+            display:flex; align-items:center; gap:40px; flex-wrap:wrap; justify-content:center;
+            background:linear-gradient(135deg, rgba(201,168,76,0.1), rgba(15,155,142,0.05));
+            border-radius:var(--radius-lg); padding:60px 40px; margin:60px 0;
+        }
+        .app-icon { font-size:5rem; }
+        .app-buttons { display:flex; gap:16px; flex-wrap:wrap; }
+
+        /* Newsletter */
+        .newsletter-box {
+            max-width:500px; margin:60px auto; display:flex; gap:12px; flex-wrap:wrap;
+        }
+        .newsletter-box input {
+            flex:1; min-width:200px; background:var(--bg-card); border:1px solid var(--border-subtle);
+            border-radius:40px; padding:14px 20px; color:var(--text-primary); font-family:var(--font-main);
+            font-size:1rem; transition:all var(--transition);
+        }
+        .newsletter-box input:focus { border-color:var(--gold); outline:none; }
+
+        /* Community */
+        .community-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:30px; margin:60px 0; }
+        .community-card {
+            background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg);
+            padding:30px; text-align:center; transition:all var(--transition);
+        }
+        .community-card:hover { border-color:var(--border-gold); transform:translateY(-5px); }
+        .community-icon { font-size:3rem; margin-bottom:16px; }
+
+        /* Footer */
+        .footer-mini { text-align:center; padding:40px 0; border-top:1px solid var(--border-subtle); color:var(--text-muted); margin-top:80px; }
+
+        .animate-on-scroll { opacity:0; transform:translateY(30px); transition:all 0.6s ease; }
+        .animate-on-scroll.visible { opacity:1; transform:translateY(0); }
+
+        @media (max-width:768px) {
+            .pricing-grid { flex-direction:column; align-items:center; }
+            .app-download { flex-direction:column; text-align:center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg"></div>
+
+    <!-- Pricing Details -->
+    <div class="section-header" id="pricing-details">
+        <h2 class="section-title">اختر باقتك المثالية</h2>
+        <p class="section-subtitle">جميع الباقات تشمل تجربة مجانية لمدة 7 أيام</p>
+    </div>
+    <div class="container pricing-grid">
+        <div class="pricing-card animate-on-scroll">
+            <div class="plan">الباقة الأساسية</div>
+            <div class="price">0 ج.م</div>
+            <ul>
+                <li>دورتان مجانيتان</li>
+                <li>اختبارات أسبوعية</li>
+                <li>لوحة صدارة</li>
+                <li>دعم فني عبر البريد</li>
+            </ul>
+            <a href="register.html" class="btn btn-outline">ابدأ مجاناً</a>
+        </div>
+        <div class="pricing-card popular animate-on-scroll">
+            <div class="plan">الباقة الذهبية</div>
+            <div class="price">99 ج.م</div>
+            <ul>
+                <li>كل الدورات</li>
+                <li>اختبارات لا محدودة</li>
+                <li>شهادات معتمدة</li>
+                <li>تحليلات الأداء</li>
+                <li>دعم فني مباشر</li>
+            </ul>
+            <a href="register.html" class="btn">الأكثر طلباً</a>
+        </div>
+        <div class="pricing-card animate-on-scroll">
+            <div class="plan">الباقة البلاتينية</div>
+            <div class="price">199 ج.م</div>
+            <ul>
+                <li>كل المميزات الذهبية</li>
+                <li>جلسات مباشرة شهرية</li>
+                <li>مراجعات خاصة</li>
+                <li>تحليل مفصل للأداء</li>
+                <li>خصم على الدورات القادمة</li>
+            </ul>
+            <a href="register.html" class="btn btn-outline">اشترك الآن</a>
+        </div>
+    </div>
+
+    <!-- Success Stories -->
+    <div class="section-header" id="success-stories">
+        <h2 class="section-title">قصص نجاح ملهمة</h2>
+        <p class="section-subtitle">طلابنا يشاركون تجاربهم بعد استخدام المنصة</p>
+    </div>
+    <div class="container stories-grid">
+        <div class="story-card animate-on-scroll">
+            <div class="story-avatar">أم</div>
+            <p class="story-quote">"كنت أعاني من الإعراب لسنوات. خلال 3 أشهر مع صالح العربية، أصبحت أحل أصعب التمارين بثقة. شكراً لكم!"</p>
+            <p class="story-name">— أحمد محمد، طالب جامعي</p>
+        </div>
+        <div class="story-card animate-on-scroll">
+            <div class="story-avatar" style="background:linear-gradient(135deg, #4a5568, #a8b4c0);">فا</div>
+            <p class="story-quote">"حصص مباشرة مفيدة جداً. المعلمون يشرحون بطريقة لا تُنسى. أشعر أني أتعلم كل يوم."</p>
+            <p class="story-name">— فاطمة علي، معلمة لغة عربية</p>
+        </div>
+        <div class="story-card animate-on-scroll">
+            <div class="story-avatar" style="background:linear-gradient(135deg, #5c3a1e, #c08a5c);">عز</div>
+            <p class="story-quote">"كنت أكره النحو، أما الآن أصبح مادتي المفضلة. الأوسمة والتنافس يجعلان الدراسة ممتعة."</p>
+            <p class="story-name">— عز الدين ياسر، طالب إعدادية</p>
+        </div>
+    </div>
+
+    <!-- App Download -->
+    <div class="section-header" id="app">
+        <h2 class="section-title">حمل تطبيق صالح العربية</h2>
+        <p class="section-subtitle">متوفر على جميع المتاجر الكبرى</p>
+    </div>
+    <div class="container app-download animate-on-scroll">
+        <div class="app-icon">📱</div>
+        <div>
+            <h3 style="font-size:1.8rem; margin-bottom:10px;">تعلم في أي وقت ومن أي مكان</h3>
+            <p style="color:var(--text-secondary); margin-bottom:20px;">التطبيق يوفر نفس تجربة المنصة كاملة مع إمكانية التحميل للمشاهدة دون اتصال.</p>
+            <div class="app-buttons">
+                <a href="#" class="btn">Google Play</a>
+                <a href="#" class="btn btn-outline">App Store</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="section-header" id="newsletter">
+        <h2 class="section-title">اشترك في نشرتنا البريدية</h2>
+        <p class="section-subtitle">احصل على أحدث النصائح والدورات والعروض</p>
+    </div>
+    <div class="container newsletter-box animate-on-scroll">
+        <input type="email" placeholder="بريدك الإلكتروني...">
+        <button class="btn">اشتراك</button>
+    </div>
+
+    <!-- Community -->
+    <div class="section-header" id="community">
+        <h2 class="section-title">انضم إلى مجتمعنا</h2>
+        <p class="section-subtitle">تفاعل مع آلاف المتعلمين وشارك تجربتك</p>
+    </div>
+    <div class="container community-grid">
+        <div class="community-card animate-on-scroll">
+            <div class="community-icon">💬</div>
+            <h3>منتدى النقاش</h3>
+            <p style="color:var(--text-secondary);">اطرح أسئلتك وناقش الدروس مع زملائك.</p>
+        </div>
+        <div class="community-card animate-on-scroll">
+            <div class="community-icon">📅</div>
+            <h3>فعاليات أسبوعية</h3>
+            <p style="color:var(--text-secondary);">مسابقات وتحديات مباشرة مع جوائز قيمة.</p>
+        </div>
+        <div class="community-card animate-on-scroll">
+            <div class="community-icon">🎙️</div>
+            <h3>لقاءات صوتية</h3>
+            <p style="color:var(--text-secondary);">جلسات حوارية مع الخبراء والمعلمين.</p>
+        </div>
+    </div>
+
+    <!-- Footer Mini -->
+    <div class="footer-mini container">
+        <p>© 2026 صالح العربية. جميع الحقوق محفوظة. | <a href="#" style="color:var(--gold-light);">الرجوع للأعلى ↑</a></p>
+    </div>
+
+    <script>
+        (function() {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.15 });
+            animatedElements.forEach(el => observer.observe(el));
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior:'smooth', block:'start' });
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html></body>
+</html><!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>صالح العربية | الموارد والدعم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #03050a;
+            --bg-primary: #0a0f1a;
+            --bg-surface: #111827;
+            --bg-card: #1a1f2e;
+            --bg-glass: rgba(17,24,39,0.85);
+            --gold: #c9a84c;
+            --gold-light: #e0c56e;
+            --gold-dark: #a8892e;
+            --teal: #0f9b8e;
+            --teal-bright: #14b8a6;
+            --text-primary: #f0ede8;
+            --text-secondary: #a3a0b3;
+            --text-muted: #5f5c6e;
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-gold: rgba(201,168,76,0.3);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.5);
+            --shadow-gold: 0 0 40px rgba(201,168,76,0.2);
+            --radius-sm: 12px;
+            --radius-md: 18px;
+            --radius-lg: 28px;
+            --font-main: 'Cairo', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --max-width: 1200px;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+        body {
+            font-family:var(--font-main);
+            background:var(--bg-deep);
+            color:var(--text-primary);
+            line-height:1.6;
+            overflow-x:hidden;
+            min-height:100vh;
+        }
+        .ambient-bg {
+            position:fixed; inset:0; pointer-events:none; z-index:0;
+            background: radial-gradient(ellipse at 20% 30%, rgba(201,168,76,0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 70%, rgba(15,155,142,0.06) 0%, transparent 55%),
+                        radial-gradient(circle at 50% 50%, rgba(201,168,76,0.03) 0%, transparent 60%);
+        }
+        .container { max-width:var(--max-width); margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+        .section-header { text-align:center; margin:100px 0 50px; }
+        .section-title { font-size:2.5rem; font-weight:800; letter-spacing:-0.5px; margin-bottom:16px; }
+        .section-subtitle { color:var(--text-secondary); font-size:1.1rem; max-width:600px; margin:0 auto; }
+
+        /* Free Resources */
+        .resources-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:30px; margin:60px 0; }
+        .resource-card {
+            background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg);
+            padding:30px; text-align:center; transition:all var(--transition);
+        }
+        .resource-card:hover { border-color:var(--border-gold); transform:translateY(-5px); }
+        .resource-icon { font-size:3rem; margin-bottom:16px; display:block; }
+        .resource-card h3 { font-size:1.2rem; margin-bottom:10px; }
+        .resource-card p { color:var(--text-secondary); font-size:0.9rem; }
+        .btn {
+            padding:14px 30px; border-radius:40px; font-weight:700; background:var(--gold); color:#0a0e16;
+            border:none; cursor:pointer; font-family:var(--font-main); font-size:1rem;
+            transition:all var(--transition); display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+            margin-top:20px;
+        }
+        .btn:hover { filter:brightness(1.15); box-shadow:0 12px 30px rgba(201,168,76,0.35); transform:translateY(-2px); }
+
+        /* Site Map */
+        .sitemap-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:30px; margin:60px 0; }
+        .sitemap-col h3 { color:var(--gold-light); margin-bottom:16px; font-size:1.1rem; }
+        .sitemap-col a { display:block; color:var(--text-secondary); text-decoration:none; margin-bottom:8px; font-size:0.95rem; }
+        .sitemap-col a:hover { color:var(--gold-light); }
+
+        /* Policy & Terms */
+        .policy-content {
+            background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg);
+            padding:40px; margin:60px 0; color:var(--text-secondary); line-height:2;
+        }
+        .policy-content h3 { color:var(--gold-light); margin:24px 0 12px; font-size:1.3rem; }
+        .policy-content p { margin-bottom:16px; }
+
+        /* Support Center */
+        .support-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:30px; margin:60px 0; }
+        .support-card {
+            background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg);
+            padding:30px; text-align:center; transition:all var(--transition);
+        }
+        .support-card:hover { border-color:var(--border-gold); transform:translateY(-5px); }
+        .support-icon { font-size:3rem; margin-bottom:16px; }
+        .support-card h3 { font-size:1.2rem; margin-bottom:10px; }
+        .support-card p { color:var(--text-secondary); font-size:0.9rem; margin-bottom:20px; }
+        .btn-outline { background:transparent; border:1px solid var(--gold); color:var(--gold-light); }
+
+        /* Footer */
+        .footer-full {
+            border-top:1px solid var(--border-subtle); padding:60px 0 30px; display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:40px; margin-top:80px;
+        }
+        .footer-col h4 { color:var(--text-primary); margin-bottom:16px; font-size:1rem; }
+        .footer-col a { display:block; color:var(--text-muted); text-decoration:none; margin-bottom:8px; font-size:0.9rem; }
+        .footer-col a:hover { color:var(--gold-light); }
+        .copyright { text-align:center; padding:20px 0; border-top:1px solid var(--border-subtle); color:var(--text-muted); }
+
+        .animate-on-scroll { opacity:0; transform:translateY(30px); transition:all 0.6s ease; }
+        .animate-on-scroll.visible { opacity:1; transform:translateY(0); }
+
+        @media (max-width:768px) {
+            .policy-content { padding:24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg"></div>
+
+    <!-- Free Resources -->
+    <div class="section-header" id="resources">
+        <h2 class="section-title">موارد مجانية للجميع</h2>
+        <p class="section-subtitle">نؤمن بأن التعليم يجب أن يكون متاحاً للجميع</p>
+    </div>
+    <div class="container resources-grid">
+        <div class="resource-card animate-on-scroll">
+            <span class="resource-icon">📄</span>
+            <h3>ملفات PDF قابلة للتحميل</h3>
+            <p>ملخصات وخرائط ذهنية للنحو والبلاغة مجانية تماماً.</p>
+            <a href="#" class="btn">تحميل الآن</a>
+        </div>
+        <div class="resource-card animate-on-scroll">
+            <span class="resource-icon">🎥</span>
+            <h3>فيديوهات تعليمية قصيرة</h3>
+            <p>دروس مصورة مدتها 5 دقائق لشرح أهم القواعد.</p>
+            <a href="#" class="btn">مشاهدة الآن</a>
+        </div>
+        <div class="resource-card animate-on-scroll">
+            <span class="resource-icon">📝</span>
+            <h3>اختبارات تجريبية</h3>
+            <p>اختبر مستواك قبل البدء في أي دورة بشكل مجاني.</p>
+            <a href="#" class="btn">ابدأ الاختبار</a>
+        </div>
+        <div class="resource-card animate-on-scroll">
+            <span class="resource-icon">📚</span>
+            <h3>مكتبة إلكترونية</h3>
+            <p>مجموعة من الكتب والمراجع العربية المتاحة للجميع.</p>
+            <a href="#" class="btn">تصفح المكتبة</a>
+        </div>
+    </div>
+
+    <!-- Site Map -->
+    <div class="section-header" id="sitemap">
+        <h2 class="section-title">خريطة الموقع</h2>
+        <p class="section-subtitle">كل ما تبحث عنه في مكان واحد</p>
+    </div>
+    <div class="container sitemap-grid">
+        <div class="sitemap-col animate-on-scroll">
+            <h3>المنصة</h3>
+            <a href="#">عن المنصة</a>
+            <a href="#">المميزات</a>
+            <a href="#">خطط الأسعار</a>
+            <a href="#">آراء الطلاب</a>
+        </div>
+        <div class="sitemap-col animate-on-scroll">
+            <h3>المحتوى</h3>
+            <a href="#">الدورات التدريبية</a>
+            <a href="#">المدونة</a>
+            <a href="#">الموارد المجانية</a>
+            <a href="#">شهاداتنا</a>
+        </div>
+        <div class="sitemap-col animate-on-scroll">
+            <h3>المجتمع</h3>
+            <a href="#">منتدى الطلاب</a>
+            <a href="#">الفعاليات</a>
+            <a href="#">قصص النجاح</a>
+            <a href="#">المدربون</a>
+        </div>
+        <div class="sitemap-col animate-on-scroll">
+            <h3>الدعم</h3>
+            <a href="#">مركز المساعدة</a>
+            <a href="#">الأسئلة الشائعة</a>
+            <a href="#">اتصل بنا</a>
+            <a href="#">سياسة الخصوصية</a>
+        </div>
+    </div>
+
+    <!-- Privacy Policy -->
+    <div class="section-header" id="privacy">
+        <h2 class="section-title">سياسة الخصوصية</h2>
+        <p class="section-subtitle">نحن نحمي بياناتك بكل جدية</p>
+    </div>
+    <div class="container policy-content animate-on-scroll">
+        <h3>1. جمع المعلومات</h3>
+        <p>نقوم بجمع المعلومات التي تقدمها طواعية عند التسجيل مثل الاسم والبريد الإلكتروني. كما نجمع بيانات حول تقدمك الدراسي لتخصيص تجربتك التعليمية. لا نبيع أو نؤجر معلوماتك لأي طرف ثالث.</p>
+        <h3>2. استخدام المعلومات</h3>
+        <p>تُستخدم بياناتك لتقديم خدماتنا التعليمية، وتحسين المنصة، وإرسال إشعارات حول الدورات والتحديثات. يمكنك إلغاء الاشتراك في أي وقت.</p>
+        <h3>3. حماية البيانات</h3>
+        <p>نستخدم تشفير SSL وجدران نارية متطورة لحماية معلوماتك. الوصول إلى البيانات مقيد بموظفين محددين فقط.</p>
+        <h3>4. ملفات تعريف الارتباط</h3>
+        <p>نستخدم ملفات تعريف الارتباط لتحسين تجربة التصفح. يمكنك تعطيلها من إعدادات المتصفح.</p>
+    </div>
+
+    <!-- Terms of Service -->
+    <div class="section-header" id="terms">
+        <h2 class="section-title">شروط الاستخدام</h2>
+        <p class="section-subtitle">يرجى قراءة الشروط قبل استخدام المنصة</p>
+    </div>
+    <div class="container policy-content animate-on-scroll">
+        <h3>1. قبول الشروط</h3>
+        <p>باستخدامك لمنصة صالح العربية، فإنك توافق على الالتزام بهذه الشروط. إذا كنت لا توافق، يرجى عدم استخدام المنصة.</p>
+        <h3>2. الحساب الشخصي</h3>
+        <p>أنت مسؤول عن الحفاظ على سرية بيانات حسابك. أي نشاط يحدث تحت حسابك هو مسؤوليتك.</p>
+        <h3>3. حقوق الملكية الفكرية</h3>
+        <p>جميع المحتويات على المنصة (دروس، فيديوهات، نصوص) محمية بموجب قوانين الملكية الفكرية ولا يجوز نسخها أو توزيعها.</p>
+        <h3>4. التعديلات</h3>
+        <p>نحتفظ بالحق في تعديل هذه الشروط في أي وقت. سيتم إخطارك بالتغييرات عبر البريد الإلكتروني.</p>
+    </div>
+
+    <!-- Support Center -->
+    <div class="section-header" id="support">
+        <h2 class="section-title">مركز الدعم</h2>
+        <p class="section-subtitle">نحن هنا لمساعدتك في أي وقت</p>
+    </div>
+    <div class="container support-grid">
+        <div class="support-card animate-on-scroll">
+            <div class="support-icon">📧</div>
+            <h3>البريد الإلكتروني</h3>
+            <p>نرد عادةً خلال 24 ساعة</p>
+            <a href="mailto:support@saleharabic.com" class="btn btn-outline">support@saleharabic.com</a>
+        </div>
+        <div class="support-card animate-on-scroll">
+            <div class="support-icon">💬</div>
+            <h3>الدردشة المباشرة</h3>
+            <p>متوفرة من 9 صباحاً حتى 10 مساءً</p>
+            <a href="#" class="btn btn-outline">ابدأ محادثة</a>
+        </div>
+        <div class="support-card animate-on-scroll">
+            <div class="support-icon">📞</div>
+            <h3>الهاتف</h3>
+            <p>خدمة عملاء على مدار الساعة</p>
+            <a href="tel:+201234567890" class="btn btn-outline">+20 123 456 7890</a>
+        </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="section-header" id="final-cta">
+        <h2 class="section-title">ابدأ رحلتك التعليمية اليوم</h2>
+        <p class="section-subtitle">لا تتردد، انضم إلى آلاف المتعلمين المتميزين</p>
+    </div>
+    <div style="text-align:center; margin:40px 0 80px;">
+        <a href="register.html" class="btn" style="font-size:1.2rem; padding:18px 40px;">سجل الآن مجاناً 🚀</a>
+    </div>
+
+    <!-- Full Footer -->
+    <footer class="footer-full container">
+        <div class="footer-col">
+            <h4>صالح العربية</h4>
+            <p style="color:var(--text-muted); font-size:0.9rem;">منصة النخبة لتعليم اللغة العربية.</p>
+            <p style="color:var(--text-muted); font-size:0.9rem;">نبني جيلاً متمكناً من لغته.</p>
+        </div>
+        <div class="footer-col">
+            <h4>روابط سريعة</h4>
+            <a href="#">عن المنصة</a>
+            <a href="#">المدونة</a>
+            <a href="#">خطط الأسعار</a>
+        </div>
+        <div class="footer-col">
+            <h4>الدعم</h4>
+            <a href="#">مركز المساعدة</a>
+            <a href="#">الأسئلة الشائعة</a>
+            <a href="#">اتصل بنا</a>
+        </div>
+        <div class="footer-col">
+            <h4>القانونية</h4>
+            <a href="#">سياسة الخصوصية</a>
+            <a href="#">شروط الاستخدام</a>
+            <a href="#">حقوق الملكية</a>
+        </div>
+    </footer>
+    <div class="copyright container">© 2026 صالح العربية. جميع الحقوق محفوظة. | صنع بكل فخر في العالم العربي</div>
+
+    <script>
+        (function() {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.15 });
+            animatedElements.forEach(el => observer.observe(el));
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior:'smooth', block:'start' });
+                    }
+                });
+            });
+        })();
+    </script>
 </body>
 </html></html>
