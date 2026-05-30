@@ -963,4 +963,360 @@
         })();
     </script>
 </body>
-</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>صالح العربية | عن المنصة والفريق</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #03050a;
+            --bg-primary: #0a0f1a;
+            --bg-surface: #111827;
+            --bg-card: #1a1f2e;
+            --bg-glass: rgba(17,24,39,0.85);
+            --gold: #c9a84c;
+            --gold-light: #e0c56e;
+            --gold-dark: #a8892e;
+            --teal: #0f9b8e;
+            --teal-bright: #14b8a6;
+            --text-primary: #f0ede8;
+            --text-secondary: #a3a0b3;
+            --text-muted: #5f5c6e;
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-gold: rgba(201,168,76,0.3);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.5);
+            --shadow-gold: 0 0 40px rgba(201,168,76,0.2);
+            --radius-sm: 12px;
+            --radius-md: 18px;
+            --radius-lg: 28px;
+            --font-main: 'Cairo', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --max-width: 1200px;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+        body {
+            font-family:var(--font-main);
+            background:var(--bg-deep);
+            color:var(--text-primary);
+            line-height:1.6;
+            overflow-x:hidden;
+            min-height:100vh;
+        }
+        .ambient-bg {
+            position:fixed; inset:0; pointer-events:none; z-index:0;
+            background: radial-gradient(ellipse at 20% 30%, rgba(201,168,76,0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 70%, rgba(15,155,142,0.06) 0%, transparent 55%),
+                        radial-gradient(circle at 50% 50%, rgba(201,168,76,0.03) 0%, transparent 60%);
+        }
+        .container { max-width:var(--max-width); margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+        /* Section Headers (same as part 1) */
+        .section-header { text-align:center; margin:100px 0 50px; }
+        .section-title { font-size:2.5rem; font-weight:800; letter-spacing:-0.5px; margin-bottom:16px; }
+        .section-subtitle { color:var(--text-secondary); font-size:1.1rem; max-width:600px; margin:0 auto; }
+
+        /* About Section */
+        .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; margin:60px 0; }
+        .about-image {
+            background:linear-gradient(135deg, #1a2332, #0f1a2b); border-radius:var(--radius-lg);
+            height:400px; display:flex; align-items:center; justify-content:center; font-size:5rem;
+            border:1px solid var(--border-subtle);
+        }
+        .about-content h2 { font-size:2rem; margin-bottom:20px; color:var(--gold-light); }
+        .about-content p { color:var(--text-secondary); margin-bottom:16px; font-size:1.05rem; }
+
+        /* Team Section */
+        .team-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:30px; margin:60px 0; }
+        .team-card {
+            background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg);
+            padding:30px 20px; text-align:center; transition:all var(--transition);
+        }
+        .team-card:hover { border-color:var(--border-gold); transform:translateY(-8px); box-shadow:var(--shadow-gold); }
+        .team-avatar {
+            width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg, #5c3d0e, #c9a84c);
+            margin:0 auto 20px; display:flex; align-items:center; justify-content:center;
+            font-size:2rem; color:#fff; font-weight:700;
+        }
+        .team-card h3 { font-size:1.2rem; margin-bottom:8px; }
+        .team-card .role { color:var(--gold-light); font-size:0.9rem; margin-bottom:10px; }
+        .team-card .bio { color:var(--text-secondary); font-size:0.85rem; }
+
+        /* Gallery */
+        .gallery-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:20px; margin:60px 0; }
+        .gallery-item {
+            height:250px; background:linear-gradient(135deg, #1a2332, #0f1a2b);
+            border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center;
+            font-size:4rem; border:1px solid var(--border-subtle); transition:all var(--transition);
+            cursor:pointer;
+        }
+        .gallery-item:hover { border-color:var(--border-gold); transform:scale(1.02); }
+
+        /* Video Section */
+        .video-container {
+            position:relative; padding-bottom:56.25%; height:0; overflow:hidden;
+            border-radius:var(--radius-lg); border:1px solid var(--border-subtle);
+            background:linear-gradient(135deg, #1a2332, #0f1a2b);
+            margin:60px 0;
+        }
+        .video-placeholder {
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            font-size:4rem; color:var(--gold-light);
+        }
+
+        /* Partners */
+        .partners-grid { display:flex; justify-content:center; gap:40px; flex-wrap:wrap; margin:60px 0; }
+        .partner-logo {
+            width:120px; height:120px; background:var(--bg-card); border-radius:var(--radius-md);
+            display:flex; align-items:center; justify-content:center; font-size:3rem;
+            border:1px solid var(--border-subtle); transition:all var(--transition);
+        }
+        .partner-logo:hover { border-color:var(--border-gold); transform:scale(1.05); }
+
+        /* Advanced Stats */
+        .advanced-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:30px; margin:60px 0; }
+        .adv-stat {
+            background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md);
+            padding:30px; text-align:center; transition:all var(--transition);
+        }
+        .adv-stat:hover { border-color:var(--border-gold); }
+        .adv-stat .num { font-family:var(--font-mono); font-size:2.2rem; font-weight:700; color:var(--gold-light); }
+        .adv-stat .label { color:var(--text-muted); margin-top:8px; }
+
+        /* FAQ Additional */
+        .faq-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(400px,1fr)); gap:20px; margin:60px 0; }
+        .faq-item {
+            background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md);
+            padding:24px; transition:all var(--transition);
+        }
+        .faq-item:hover { border-color:var(--border-gold); }
+        .faq-item h3 { font-size:1.1rem; margin-bottom:10px; color:var(--gold-light); }
+        .faq-item p { color:var(--text-secondary); font-size:0.95rem; }
+
+        /* Contact Form Expanded */
+        .contact-form {
+            max-width:600px; margin:60px auto; display:flex; flex-direction:column; gap:16px;
+        }
+        .contact-form input, .contact-form textarea {
+            background:var(--bg-card); border:1px solid var(--border-subtle);
+            border-radius:var(--radius-sm); padding:14px 18px; color:var(--text-primary);
+            font-family:var(--font-main); font-size:1rem; transition:all var(--transition); width:100%;
+        }
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color:var(--gold); outline:none; box-shadow:0 0 0 3px rgba(201,168,76,0.1);
+        }
+        .btn {
+            padding:14px 30px; border-radius:40px; font-weight:700; background:var(--gold); color:#0a0e16;
+            border:none; cursor:pointer; font-family:var(--font-main); font-size:1rem;
+            transition:all var(--transition); display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+        }
+        .btn:hover { filter:brightness(1.15); box-shadow:0 12px 30px rgba(201,168,76,0.35); transform:translateY(-2px); }
+
+        /* Animations */
+        .animate-on-scroll { opacity:0; transform:translateY(30px); transition:all 0.6s ease; }
+        .animate-on-scroll.visible { opacity:1; transform:translateY(0); }
+
+        /* Footer mini */
+        .footer-mini { text-align:center; padding:40px 0; border-top:1px solid var(--border-subtle); color:var(--text-muted); margin-top:80px; }
+
+        @media (max-width:768px) {
+            .about-grid { grid-template-columns:1fr; }
+            .faq-grid { grid-template-columns:1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg"></div>
+
+    <!-- About Us Section -->
+    <div class="section-header" id="about">
+        <h2 class="section-title">من نحن</h2>
+        <p class="section-subtitle">تعرف على قصة صالح العربية ورسالتنا</p>
+    </div>
+    <div class="container about-grid animate-on-scroll">
+        <div class="about-image">🏛️</div>
+        <div class="about-content">
+            <h2>منصة تعليمية رائدة</h2>
+            <p>تأسست "صالح العربية" على يد نخبة من معلمي اللغة العربية وخبراء التكنولوجيا بهدف إحداث نقلة نوعية في طريقة تعلم اللغة العربية. نؤمن أن كل طالب يستحق تعليماً عالي الجودة يناسب قدراته وطموحاته.</p>
+            <p>منذ انطلاقنا، نجحنا في بناء مجتمع تعليمي يضم آلاف الطلاب من مختلف أنحاء العالم العربي، وساعدناهم على تحقيق نتائج مبهرة في فهم النحو والبلاغة والأدب.</p>
+            <p>نلتزم بتقديم تجربة تعليمية فريدة تجمع بين المناهج العلمية الدقيقة وأحدث التقنيات التفاعلية.</p>
+        </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="section-header" id="team">
+        <h2 class="section-title">فريقنا التعليمي</h2>
+        <p class="section-subtitle">نخبة من المعلمين والخبراء في خدمتكم</p>
+    </div>
+    <div class="container team-grid">
+        <div class="team-card animate-on-scroll">
+            <div class="team-avatar">ص</div>
+            <h3>أ. صالح العربي</h3>
+            <div class="role">مؤسس المنصة · خبير النحو</div>
+            <p class="bio">أكثر من 15 عاماً في تدريس اللغة العربية، ومقدم برامج تعليمية متلفزة.</p>
+        </div>
+        <div class="team-card animate-on-scroll">
+            <div class="team-avatar" style="background:linear-gradient(135deg, #4a5568, #a8b4c0);">م</div>
+            <h3>د. منى الشاذلي</h3>
+            <div class="role">أستاذ البلاغة والأدب</div>
+            <p class="bio">حاصلة على الدكتوراه في الأدب العربي، ولها مؤلفات في النقد الأدبي.</p>
+        </div>
+        <div class="team-card animate-on-scroll">
+            <div class="team-avatar" style="background:linear-gradient(135deg, #5c3a1e, #c08a5c);">أ</div>
+            <h3>أ. أحمد الدوسري</h3>
+            <div class="role">خبير التجويد والقراءات</div>
+            <p class="bio">مجاز في القراءات العشر، ومدرب معتمد للغة العربية.</p>
+        </div>
+        <div class="team-card animate-on-scroll">
+            <div class="team-avatar" style="background:linear-gradient(135deg, #1e3a5f, #3b82f6);">س</div>
+            <h3>أ. سلمى حسن</h3>
+            <div class="role">مدربة الكتابة الإبداعية</div>
+            <p class="bio">كاتبة وناشرة، تساعد الطلاب على إطلاق العنان لمهاراتهم الكتابية.</p>
+        </div>
+    </div>
+
+    <!-- Gallery -->
+    <div class="section-header" id="gallery">
+        <h2 class="section-title">معرض الصور</h2>
+        <p class="section-subtitle">لقطات من ورش العمل والفصول الدراسية</p>
+    </div>
+    <div class="container gallery-grid">
+        <div class="gallery-item animate-on-scroll">🖼️</div>
+        <div class="gallery-item animate-on-scroll">📚</div>
+        <div class="gallery-item animate-on-scroll">💻</div>
+        <div class="gallery-item animate-on-scroll">🏫</div>
+    </div>
+
+    <!-- Video Section -->
+    <div class="section-header" id="video">
+        <h2 class="section-title">فيديو تعريفي</h2>
+        <p class="section-subtitle">شاهد كيف تعمل المنصة في دقيقتين</p>
+    </div>
+    <div class="container video-container animate-on-scroll">
+        <div class="video-placeholder">▶️</div>
+    </div>
+
+    <!-- Partners -->
+    <div class="section-header" id="partners">
+        <h2 class="section-title">شركاء النجاح</h2>
+        <p class="section-subtitle">جهات تعليمية وأكاديمية نتعاون معها</p>
+    </div>
+    <div class="container partners-grid">
+        <div class="partner-logo">🏫</div>
+        <div class="partner-logo">📖</div>
+        <div class="partner-logo">🌐</div>
+        <div class="partner-logo">🎓</div>
+    </div>
+
+    <!-- Advanced Statistics -->
+    <div class="section-header" id="advanced-stats">
+        <h2 class="section-title">إحصائيات متقدمة</h2>
+        <p class="section-subtitle">أرقام تعكس تأثيرنا الحقيقي</p>
+    </div>
+    <div class="container advanced-stats">
+        <div class="adv-stat animate-on-scroll">
+            <div class="num" id="hoursCounter">0</div>
+            <div class="label">ساعة تعليمية</div>
+        </div>
+        <div class="adv-stat animate-on-scroll">
+            <div class="num" id="certificatesCounter">0</div>
+            <div class="label">شهادة ممنوحة</div>
+        </div>
+        <div class="adv-stat animate-on-scroll">
+            <div class="num">4.9</div>
+            <div class="label">تقييم المنصة</div>
+        </div>
+        <div class="adv-stat animate-on-scroll">
+            <div class="num">50+</div>
+            <div class="label">مدرب معتمد</div>
+        </div>
+    </div>
+
+    <!-- Additional FAQ -->
+    <div class="section-header" id="faq-extra">
+        <h2 class="section-title">أسئلة إضافية</h2>
+        <p class="section-subtitle">مزيد من التوضيحات التي قد تهمك</p>
+    </div>
+    <div class="container faq-grid">
+        <div class="faq-item animate-on-scroll">
+            <h3>هل أحتاج إلى اتصال دائم بالإنترنت؟</h3>
+            <p>نعم، لأن الدروس تفاعلية وتحتاج إلى اتصال، لكن نوفر إمكانية تحميل بعض المواد للمراجعة دون اتصال.</p>
+        </div>
+        <div class="faq-item animate-on-scroll">
+            <h3>كيف يتم احتساب النقاط؟</h3>
+            <p>تحصل على نقاط خبرة (XP) عند مشاهدة الدروس وحل التمارين والاختبارات، وتزيد نقاطك مع الإنجازات المتتالية.</p>
+        </div>
+        <div class="faq-item animate-on-scroll">
+            <h3>هل يمكنني التفاعل مع المعلمين؟</h3>
+            <p>نوفر جلسات مباشرة أسبوعية (حسب الباقة) وكذلك منتدى نقاشي داخل كل دورة للاستفسارات.</p>
+        </div>
+        <div class="faq-item animate-on-scroll">
+            <h3>كيف أضمن جودة الشهادة؟</h3>
+            <p>شهاداتنا موثقة برقم تسلسلي ويمكن التحقق منها عبر موقعنا، وهي معترف بها في العديد من الجهات.</p>
+        </div>
+    </div>
+
+    <!-- Expanded Contact Form -->
+    <div class="section-header" id="contact-expanded">
+        <h2 class="section-title">تواصل معنا</h2>
+        <p class="section-subtitle">يسعدنا الرد على استفساراتكم واقتراحاتكم</p>
+    </div>
+    <form class="container contact-form animate-on-scroll">
+        <input type="text" placeholder="الاسم الكامل" required>
+        <input type="email" placeholder="البريد الإلكتروني" required>
+        <input type="tel" placeholder="رقم الهاتف (اختياري)">
+        <input type="text" placeholder="الموضوع">
+        <textarea rows="5" placeholder="اكتب رسالتك هنا..."></textarea>
+        <button type="submit" class="btn">إرسال ✉️</button>
+    </form>
+
+    <!-- Footer Mini -->
+    <div class="footer-mini container">
+        <p>© 2026 صالح العربية. جميع الحقوق محفوظة. | <a href="#" style="color:var(--gold-light);">الرجوع للأعلى ↑</a></p>
+    </div>
+
+    <script>
+        (function() {
+            function animateCounter(id, target) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                let current = 0;
+                const step = Math.max(1, Math.floor(target / 60));
+                const interval = setInterval(() => {
+                    current += step;
+                    if (current >= target) { current = target; clearInterval(interval); }
+                    el.textContent = current.toLocaleString();
+                }, 25);
+            }
+            animateCounter('hoursCounter', 185000);
+            animateCounter('certificatesCounter', 12400);
+
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.15 });
+            animatedElements.forEach(el => observer.observe(el));
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior:'smooth', block:'start' });
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html></html>
